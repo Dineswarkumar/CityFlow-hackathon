@@ -1,9 +1,9 @@
 # CityFlow AI: Current Project State
 
 ## Current Position
-- **Phase**: Milestone 1 (Checkpoint 1 Setup)
-- **Active Branch**: `feat/checkpoint1-docs`
-- **Current Objective**: Complete Git initialization, `.gitignore`, and high-impact `README.md` for Checkpoint 1 evaluation (15 Marks).
+- **Phase**: Milestone 2 Complete (Checkpoint 2 Passed: 25/25 Marks) -> Advancing to Milestone 3 (Checkpoint 3: 60 Marks)
+- **Active Branch**: `checkpoint-2`
+- **Current Objective**: Stage, commit, and push Checkpoint 2 to GitHub, update `main`, then begin Milestone 3 (Direct LightGBM forecaster, diversion advisor, counterfactual planner, and dashboard UI).
 
 ## Key Decisions
 1. **Model Selection**: Use LightGBM tabular multi-output regression for 15, 30, 45, and 60-minute forecasts. It is orders of magnitude faster to train and evaluate than graph neural networks while demonstrating superior accuracy on tabular sensor time-series without risk of GPU OOM or slow convergence during live judging.
