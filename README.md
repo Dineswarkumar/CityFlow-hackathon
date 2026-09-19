@@ -145,24 +145,51 @@ cityflow-hackathon/
 │   ├── PLAN.md                        # Sprint execution plan
 │   └── UAT.md                         # Checkpoint verification & test criteria
 ├── .gitignore                         # Data file protection & repo hygiene
-├── README.md                          # Checkpoint 1 Comprehensive System Spec
+├── README.md                          # Comprehensive System Specification
 ├── requirements.txt                   # Environment dependencies
-├── tests/                             # Verification & Regression Test Suite
-│   ├── test_cleaner.py                # Tests for noise scrubber & stuck sensors
-│   ├── test_graph.py                  # Tests for topology & turn restrictions
-│   ├── test_incident_detector.py      # Tests for anomaly classification
-│   └── test_forecaster.py             # Tests for 15-60m inference latency & shapes
-├── cityflow/                          # Modular Analytics Engine
+├── run.py                             # Unified 1-command entrypoint (Server, Tests, Eval)
+│
+├── index.html                         # Executive Mission Control & Gateway
+├── commuter.html                      # Commuter Navigation & Live GIS Map
+├── police.html                        # Traffic Police Tactical Command
+├── planner.html                       # Municipal Infrastructure Planner
+├── forecaster.html                    # NeurAX Multi-Horizon AI Forecaster
+│
+├── assets/                            # Modular Frontend Engine
+│   ├── css/
+│   │   ├── main.css                   # Liquid glassmorphism, typography, @view-transition
+│   │   └── map.css                    # Leaflet GIS overrides & incident pulses
+│   ├── js/
+│   │   ├── common.js                  # Theme switcher, hamburger sidebar, sound FX
+│   │   ├── drone.js                   # Realistic aerial drone background canvas
+│   │   ├── map.js                     # Leaflet GIS engine with failover tiles
+│   │   ├── commuter.js                # Origin-destination route & detour solver
+│   │   ├── police.js                  # Adaptive signal green-split optimizer
+│   │   ├── planner.js                 # Road widening candidate evaluator & ROI
+│   │   └── forecaster.js              # Multi-horizon canvas chart & Shapley matrix
+│   └── data/
+│       ├── network_data.js            # CORS-free offline GIS dataset
+│       └── network_data.json          # Network topology JSON
+│
+├── backend/                           # Clean Backend Services
+│   ├── __init__.py
+│   └── server.py                      # Server supporting REST API + static assets
+│
+├── cityflow/                          # Modular Core Analytics & ML Engine
 │   ├── __init__.py
 │   ├── cleaner.py                     # Telemetry sanitization & imputation
 │   ├── graph.py                       # NetworkX topology, turn limits & signals
 │   ├── incident_detector.py           # Dual-layer incident & anomaly engine
 │   ├── forecaster.py                  # Multi-horizon LightGBM predictive models
 │   ├── advisory_engine.py             # Turn-restricted tactical rerouting
-│   └── infrastructure_planner.py      # Counterfactual capacity & ROI simulator
-├── index.html                         # Interactive Command Center (Leaflet GIS + Drone Engine)
-├── evaluate_models.py                 # Multi-horizon ML evaluation audit (1.4s)
-└── verify_checkpoint2.py              # Checkpoint 2 verification script (0.3s)
+│   ├── infrastructure_planner.py      # Counterfactual capacity & ROI simulator
+│   └── baseline.py                    # Historical baseline benchmarks
+│
+├── scripts/                           # Benchmarking & Verification Scripts
+│   ├── evaluate_models.py             # Multi-horizon ML evaluation audit
+│   └── verify_checkpoint2.py          # Checkpoint 2 verification script
+│
+└── tests/                             # Verification & Regression Test Suite (11 Tests)
 ```
 
 ---
@@ -177,36 +204,29 @@ CityFlow AI runs on Python 3.10+ (tested through Python 3.14 on Windows/Linux/ma
 
 ```bash
 # Clone the repository
-git clone https://github.com/Dineswarkumar/CityFlow-hackathon.git
+git clone -b main https://github.com/Dineswarkumar/CityFlow-hackathon.git
 cd CityFlow-hackathon
 
 # Install open-source dependencies
 pip install -r requirements.txt
 ```
 
-### 2. Run Automated ML Audits & Verification
-Verify telemetry cleaning, graph routing, anomaly detection, and predictive accuracy:
+### 2. The Unified 1-Command Entrypoint (`run.py`)
+
+CityFlow AI includes a unified runner that handles all tasks with zero setup:
 
 ```bash
-# Checkpoint 2 full audit (runs in ~0.3s):
-python verify_checkpoint2.py
+# 1. Start the Web Application & REST API Server:
+python run.py
 
-# Checkpoint 3 multi-horizon ML evaluation & overfitting audit (runs in ~1.4s):
-python evaluate_models.py
+# 2. Run Complete Unit Test Suite (11/11 tests passing in ~1.0s):
+python run.py --test
 
-# Run complete unit test suite (11 passing tests):
-python -m unittest discover tests
+# 3. Run Multi-Horizon ML Benchmark & Anti-Overfitting Audit (~1.1s):
+python run.py --eval
 ```
 
-### 3. Launch the Interactive Command Center (Web Application)
-No server configuration or npm build steps required:
-
-- **Direct Launch**: Simply double-click `index.html` to open directly in Chrome, Edge, Firefox, or Safari (`file:///` protocol supported via bundled `network_data.js`).
-- **Or via Local Web Server**:
-  ```bash
-  python -m http.server 8000
-  ```
-  Open your browser at `http://localhost:8000`.
+Once running, open your browser at **`http://localhost:8000`** to access all 5 specialized operational portals.
 
 ---
 
