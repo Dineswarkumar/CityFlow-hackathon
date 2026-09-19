@@ -26,10 +26,10 @@
     }
   </script>
 
-  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <!-- Google Fonts: Outfit (Headings) + DM Sans (Body) + JetBrains Mono (Code/Metrics) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <!-- Leaflet GIS Map -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -42,12 +42,61 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
-    * { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .mono { font-family: 'JetBrains Mono', monospace; }
+    /* Human-crafted bespoke typography (Zero generic AI template look) */
+    * { 
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+    }
+    h1, h2, h3, h4, h5, h6, .font-heading, .heading-brand { 
+      font-family: 'Outfit', sans-serif !important; 
+      letter-spacing: -0.02em;
+    }
+    .mono, .font-mono { 
+      font-family: 'JetBrains Mono', monospace !important; 
+    }
     
     /* Smooth transitions */
     .theme-transition {
       transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    /* ================= LIQUID GLASS EFFECT (GENUINE GLASSMORPHISM & REFRACTION) ================= */
+    .liquid-glass {
+      background: rgba(255, 255, 255, 0.70) !important;
+      backdrop-filter: blur(20px) saturate(180%) contrast(105%) !important;
+      -webkit-backdrop-filter: blur(20px) saturate(180%) contrast(105%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.55) !important;
+      box-shadow: 0 12px 35px 0 rgba(15, 23, 42, 0.07), inset 0 1px 1px 0 rgba(255, 255, 255, 0.85) !important;
+    }
+    .dark .liquid-glass {
+      background: rgba(13, 19, 33, 0.62) !important;
+      backdrop-filter: blur(22px) saturate(190%) contrast(105%) !important;
+      -webkit-backdrop-filter: blur(22px) saturate(190%) contrast(105%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.10) !important;
+      box-shadow: 0 16px 40px 0 rgba(0, 0, 0, 0.48), inset 0 1px 1px 0 rgba(255, 255, 255, 0.14) !important;
+    }
+
+    .liquid-glass-sidebar {
+      background: rgba(255, 255, 255, 0.82) !important;
+      backdrop-filter: blur(24px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    }
+    .dark .liquid-glass-sidebar {
+      background: rgba(11, 15, 25, 0.82) !important;
+      backdrop-filter: blur(24px) saturate(190%) !important;
+      -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+    }
+
+    .liquid-glass-subtle {
+      background: rgba(255, 255, 255, 0.45) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.35) !important;
+    }
+    .dark .liquid-glass-subtle {
+      background: rgba(15, 23, 42, 0.45) !important;
+      backdrop-filter: blur(14px) !important;
+      -webkit-backdrop-filter: blur(14px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
     }
     
     /* Clean Leaflet styles */
@@ -56,24 +105,24 @@
       font-family: inherit;
     }
     .leaflet-popup-content-wrapper {
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(10px);
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(16px);
       color: #f8fafc;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
     }
     .light .leaflet-popup-content-wrapper {
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.92);
       color: #0f172a;
       border: 1px solid rgba(0, 0, 0, 0.08);
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
     }
     .leaflet-popup-tip {
-      background: rgba(15, 23, 42, 0.95);
+      background: rgba(15, 23, 42, 0.92);
     }
     .light .leaflet-popup-tip {
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.92);
     }
 
     /* Radar scan animation for drone */
@@ -97,10 +146,11 @@
 <body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-800 dark:text-slate-100 min-h-screen theme-transition flex antialiased overflow-x-hidden selection:bg-cyan-500 selection:text-white relative">
 
   <!-- ================= ANIMATED DRONE & HIGHWAY CANVAS BACKGROUND ================= -->
-  <canvas id="drone-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40 dark:opacity-25"></canvas>
+  <!-- Set at high opacity so realistic drone and lights are vividly visible through liquid frosted glass -->
+  <canvas id="drone-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-90 dark:opacity-85"></canvas>
 
-  <!-- ================= LEFT SIDEBAR (NEW: SOLVES EMPTY MARGINS & CRAMPED TOP BAR) ================= -->
-  <aside class="w-72 shrink-0 bg-white dark:bg-[#0E1322] border-r border-slate-200 dark:border-slate-800/80 flex flex-col justify-between z-20 h-screen sticky top-0 shadow-lg shadow-slate-900/5 theme-transition">
+  <!-- ================= LEFT SIDEBAR (COLLAPSIBLE VIA 3-LINE HAMBURGER BUTTON) ================= -->
+  <aside id="main-sidebar" class="w-72 shrink-0 border-r border-slate-200/80 dark:border-white/10 flex flex-col justify-between z-20 h-screen sticky top-0 shadow-lg shadow-slate-900/5 theme-transition liquid-glass-sidebar" style="transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;">
     
     <!-- Top Branding -->
     <div class="p-6 border-b border-slate-200/80 dark:border-slate-800/80">
@@ -113,7 +163,7 @@
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="font-extrabold text-lg tracking-tight text-slate-900 dark:text-white">CityFlow <span class="text-cyan-500">AI</span></h1>
+            <h1 class="font-extrabold text-lg tracking-tight text-slate-900 dark:text-white font-heading">CityFlow <span class="text-cyan-500">AI</span></h1>
             <span class="px-1.5 py-0.5 text-[10px] font-bold rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20">v2.4</span>
           </div>
           <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Hyderabad Metro TCC</p>
@@ -121,20 +171,20 @@
       </div>
 
       <!-- Autonomous Aerial Drone Patrol Live Telemetry -->
-      <div class="mt-4 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/50 flex items-center justify-between text-xs">
+      <div class="mt-4 p-2.5 rounded-xl bg-cyan-500/5 dark:bg-cyan-950/20 border border-cyan-500/20 flex items-center justify-between text-xs">
         <div class="flex items-center gap-2">
-          <span class="p-1 rounded bg-cyan-500/10 text-cyan-500"><i data-lucide="plane" class="w-3.5 h-3.5"></i></span>
-          <span class="font-semibold text-slate-700 dark:text-slate-300">Surveillance Drone</span>
+          <span class="p-1 rounded bg-cyan-500/10 text-cyan-500"><i data-lucide="crosshair" class="w-3.5 h-3.5 animate-spin" style="animation-duration: 6s;"></i></span>
+          <span class="font-semibold text-slate-700 dark:text-slate-300">Surveillance Patrol</span>
         </div>
         <span class="font-mono text-[11px] text-emerald-500 font-bold flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Patrol Active
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> 3 Drones Live
         </span>
       </div>
     </div>
 
     <!-- Vertical Navigation Menu -->
     <div class="px-4 py-6 flex-1 flex flex-col gap-1.5 overflow-y-auto">
-      <div class="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Portals &amp; Views</div>
+      <div class="px-3 mb-2 text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 font-heading">Portals &amp; Views</div>
       
       <!-- Tab 1: Commuter Portal -->
       <button id="nav-commuter" onclick="switchPortal('commuter')" class="w-full px-3.5 py-3 rounded-xl text-xs font-bold flex items-center gap-3 transition-all bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30 shadow-sm">
@@ -189,7 +239,7 @@
     </div>
 
     <!-- Sidebar Footer: Stats & Theme Toggle -->
-    <div class="p-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+    <div class="p-4 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between">
       <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
         <i data-lucide="cpu" class="w-4 h-4 text-cyan-500"></i>
         <span class="font-mono text-[11px]">11ms Inference</span>
@@ -208,13 +258,18 @@
   <!-- ================= RIGHT MAIN APPLICATION CONTENT (FULL WIDTH: ZERO WASTED GAPS) ================= -->
   <div class="flex-1 flex flex-col min-w-0 z-10">
     
-    <!-- Top Header Bar -->
-    <header class="h-16 px-6 border-b border-slate-200 dark:border-slate-800/80 bg-white/70 dark:bg-[#0B0F19]/70 backdrop-blur-md flex items-center justify-between shrink-0 theme-transition">
-      <div class="flex items-center gap-4">
-        <h2 id="top-title" class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+    <!-- Top Header Bar with 3-Line Hamburger Menu Button -->
+    <header class="h-16 px-6 border-b border-slate-200/80 dark:border-white/10 bg-white/60 dark:bg-[#0B0F19]/60 backdrop-blur-xl flex items-center justify-between shrink-0 theme-transition sticky top-0 z-30">
+      <div class="flex items-center gap-3">
+        <!-- 3-Line Horizontal Hamburger Menu Button -->
+        <button id="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar (Hide/Show)" class="p-2 -ml-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-slate-800/80 active:scale-95 transition-all flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-cyan-500/40">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+
+        <h2 id="top-title" class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2 font-heading tracking-tight">
           <i data-lucide="car" class="w-4 h-4 text-cyan-500"></i> Commuter Navigation &amp; Detour View
         </h2>
-        <span class="hidden md:inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+        <span class="hidden md:inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80">
           Hyderabad Metropolitan Area (436 Corridors)
         </span>
       </div>
@@ -243,12 +298,12 @@
       <div id="view-commuter" class="grid grid-cols-1 xl:grid-cols-12 gap-6 h-full">
         
         <!-- Interactive Leaflet Map (Takes 70% width on desktop) -->
-        <div class="xl:col-span-8 bg-white dark:bg-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm flex flex-col h-[650px] relative theme-transition">
+        <div class="xl:col-span-8 liquid-glass rounded-2xl overflow-hidden shadow-sm flex flex-col h-[650px] relative theme-transition">
           
-          <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white/80 dark:bg-slate-900/80 backdrop-blur-md z-10">
+          <div class="p-4 border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between bg-white/40 dark:bg-slate-900/40 backdrop-blur-md z-10">
             <div class="flex items-center gap-2">
               <i data-lucide="map" class="w-4 h-4 text-cyan-500"></i>
-              <span class="text-sm font-bold text-slate-900 dark:text-white">Live Hyderabad Road Network</span>
+              <span class="text-sm font-bold text-slate-900 dark:text-white font-heading">Live Hyderabad Road Network</span>
               <span class="text-xs text-slate-400 ml-1">(Hover any corridor for details)</span>
             </div>
             <div class="flex items-center gap-2 text-xs">
@@ -262,8 +317,8 @@
           <!-- Leaflet Container -->
           <div id="map-commuter" class="flex-1 w-full z-0"></div>
 
-          <!-- Floating Map Legend -->
-          <div class="absolute bottom-4 left-4 z-10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 shadow-md text-xs flex items-center gap-4">
+          <!-- Floating Map Legend with Liquid Glass -->
+          <div class="absolute bottom-4 left-4 z-10 liquid-glass px-3.5 py-2 rounded-xl text-xs flex items-center gap-4">
             <div class="flex items-center gap-1.5"><span class="w-3.5 h-1.5 bg-emerald-500 rounded-full"></span> <span>Smooth Flow</span></div>
             <div class="flex items-center gap-1.5"><span class="w-3.5 h-1.5 bg-amber-500 rounded-full"></span> <span>Moderate</span></div>
             <div class="flex items-center gap-1.5"><span class="w-3.5 h-1.5 bg-rose-500 rounded-full"></span> <span>Blocked Choke Point</span></div>
@@ -274,57 +329,57 @@
         <!-- Commuter Route Guidance Sidebar (Takes 30% width) -->
         <div class="xl:col-span-4 flex flex-col gap-4">
           
-          <div class="bg-white dark:bg-slate-900/80 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition">
-            <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <div class="liquid-glass p-5 rounded-2xl theme-transition">
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2 font-heading">
               <i data-lucide="locate-fixed" class="w-4 h-4 text-cyan-500"></i> Route Search &amp; Selection
             </h3>
             <div class="mt-3.5 space-y-3 text-xs">
               <div>
                 <label class="text-slate-400 font-medium">Origin Junction</label>
-                <div class="mt-1 p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-semibold flex items-center gap-2">
+                <div class="mt-1 p-3 rounded-xl bg-white/50 dark:bg-slate-800/50 border border-slate-200/70 dark:border-white/10 text-slate-900 dark:text-white font-semibold flex items-center gap-2">
                   <span class="w-2.5 h-2.5 rounded-full bg-cyan-500"></span> Gachibowli Outer Junction (N015)
                 </div>
               </div>
               <div>
                 <label class="text-slate-400 font-medium">Destination</label>
-                <div class="mt-1 p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-semibold flex items-center gap-2">
+                <div class="mt-1 p-3 rounded-xl bg-white/50 dark:bg-slate-800/50 border border-slate-200/70 dark:border-white/10 text-slate-900 dark:text-white font-semibold flex items-center gap-2">
                   <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Hitec City Mindspace (N082)
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Turn-Restricted Detour Advisory Box -->
-          <div class="bg-gradient-to-b from-cyan-500/10 to-transparent dark:from-cyan-950/30 dark:to-transparent bg-white dark:bg-slate-900/80 p-6 rounded-2xl border border-cyan-500/30 shadow-sm flex-1 flex flex-col justify-between theme-transition">
+          <!-- Turn-Restricted Detour Advisory Box with Liquid Glass -->
+          <div class="liquid-glass p-6 rounded-2xl border-cyan-500/30 flex-1 flex flex-col justify-between theme-transition relative overflow-hidden">
             <div>
               <div class="flex items-center justify-between">
                 <span class="px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs font-bold border border-rose-500/20 flex items-center gap-1.5">
                   <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Accident on R0067
                 </span>
-                <span class="text-xs font-extrabold text-cyan-600 dark:text-cyan-400">Save 14.2 mins</span>
+                <span class="text-xs font-extrabold text-cyan-600 dark:text-cyan-400 font-mono">Save 14.2 mins</span>
               </div>
 
-              <h4 class="mt-3.5 text-base font-bold text-slate-900 dark:text-white leading-tight">Recommended Detour via Cyber Gateway Bypass</h4>
+              <h4 class="mt-3.5 text-base font-bold text-slate-900 dark:text-white leading-tight font-heading">Recommended Detour via Cyber Gateway Bypass</h4>
               <p class="mt-1.5 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                 Corridor R0067 has gridlocked due to a stalled vehicle (-36.5 km/h below normal). The AI rerouting algorithm calculated an alternative turn-restricted route saving 14.2 minutes.
               </p>
 
               <div class="mt-4 grid grid-cols-2 gap-3">
-                <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                <div class="p-3.5 rounded-xl liquid-glass-subtle">
                   <span class="text-[11px] text-slate-400 font-medium">Detour ETA</span>
-                  <p class="text-lg font-bold text-slate-900 dark:text-white mt-0.5">16.4 mins</p>
+                  <p class="text-lg font-bold text-slate-900 dark:text-white mt-0.5 font-mono">16.4 mins</p>
                   <span class="text-[10px] text-emerald-500 font-semibold">vs 30.6m congested</span>
                 </div>
-                <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+                <div class="p-3.5 rounded-xl liquid-glass-subtle">
                   <span class="text-[11px] text-slate-400 font-medium">Turn Penalties</span>
-                  <p class="text-lg font-bold text-slate-900 dark:text-white mt-0.5">0 Violations</p>
+                  <p class="text-lg font-bold text-slate-900 dark:text-white mt-0.5 font-mono">0 Violations</p>
                   <span class="text-[10px] text-cyan-500 font-semibold">100% Legal Turns</span>
                 </div>
               </div>
             </div>
 
             <div class="mt-6 space-y-2">
-              <button onclick="startGuidance()" id="btn-guidance" class="w-full py-3 px-4 rounded-xl bg-cyan-500 hover:bg-cyan-600 active:scale-[0.98] text-white font-bold text-xs shadow-md shadow-cyan-500/25 transition-all flex items-center justify-center gap-2">
+              <button onclick="startGuidance()" id="btn-guidance" class="w-full py-3 px-4 rounded-xl bg-cyan-500 hover:bg-cyan-600 active:scale-[0.98] text-white font-bold text-xs shadow-md shadow-cyan-500/25 transition-all flex items-center justify-center gap-2 font-heading">
                 <i data-lucide="navigation-2" class="w-4 h-4"></i> Accept Detour &amp; Start Navigation
               </button>
               <p id="guidance-status" class="text-[11px] text-center text-slate-400 font-medium"></p>
@@ -339,76 +394,76 @@
       <div id="view-police" class="hidden grid-cols-1 xl:grid-cols-12 gap-6 h-full">
         
         <!-- Live Incident Dispatch Console (7 Cols) -->
-        <div class="xl:col-span-8 bg-white dark:bg-slate-900/80 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition flex flex-col gap-5">
-          <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+        <div class="xl:col-span-8 liquid-glass p-6 rounded-2xl theme-transition flex flex-col gap-5">
+          <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-white/10 pb-4">
             <div>
-              <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2 font-heading">
                 <i data-lucide="radio" class="w-4 h-4 text-rose-500 animate-pulse"></i> Police Tactical Dispatch Center
               </h3>
               <p class="text-xs text-slate-400 mt-0.5">Continuous incident detection with false-alarm neighbor consensus</p>
             </div>
-            <span class="px-2.5 py-1 text-xs font-bold rounded-lg bg-rose-500/10 text-rose-500 border border-rose-500/20">1 Active Critical Incident</span>
+            <span class="px-2.5 py-1 text-xs font-bold rounded-lg bg-rose-500/10 text-rose-500 border border-rose-500/20 font-mono">1 Active Critical Incident</span>
           </div>
 
-          <!-- Critical Incident Card -->
-          <div class="p-6 rounded-2xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/50 flex flex-col gap-4">
+          <!-- Critical Incident Card with Liquid Glass -->
+          <div class="p-6 rounded-2xl bg-rose-500/10 dark:bg-rose-950/30 border border-rose-500/30 backdrop-blur-md flex flex-col gap-4">
             <div class="flex items-start justify-between">
               <div>
                 <div class="flex items-center gap-2">
-                  <span class="px-2 py-0.5 text-xs font-bold rounded bg-rose-600 text-white">PRIORITY 1</span>
-                  <span class="text-xs font-bold text-slate-900 dark:text-white">Segment R0067 &bull; Junction N015 Approach</span>
+                  <span class="px-2 py-0.5 text-xs font-bold rounded bg-rose-600 text-white font-mono">PRIORITY 1</span>
+                  <span class="text-xs font-bold text-slate-900 dark:text-white font-mono">Segment R0067 &bull; Junction N015 Approach</span>
                 </div>
-                <h4 class="mt-1.5 text-base font-bold text-rose-600 dark:text-rose-400">Stalled Vehicle Causing Critical Arterial Choke</h4>
+                <h4 class="mt-1.5 text-base font-bold text-rose-600 dark:text-rose-400 font-heading">Stalled Vehicle Causing Critical Arterial Choke</h4>
               </div>
               <span class="text-xs font-mono font-bold text-slate-400">18:12 IST</span>
             </div>
 
             <div class="grid grid-cols-3 gap-3 text-xs">
-              <div class="p-3 rounded-xl bg-white dark:bg-slate-900/90 border border-rose-200 dark:border-rose-900/40">
+              <div class="p-3 rounded-xl liquid-glass-subtle border-rose-500/20">
                 <span class="text-slate-400 text-[11px]">Speed Drop</span>
-                <p class="text-base font-bold text-rose-600 dark:text-rose-400 mt-0.5">-36.5 km/h</p>
+                <p class="text-base font-bold text-rose-600 dark:text-rose-400 mt-0.5 font-mono">-36.5 km/h</p>
                 <span class="text-[10px] text-slate-400">Actual: 12.5 vs Exp: 49.0</span>
               </div>
-              <div class="p-3 rounded-xl bg-white dark:bg-slate-900/90 border border-rose-200 dark:border-rose-900/40">
+              <div class="p-3 rounded-xl liquid-glass-subtle border-rose-500/20">
                 <span class="text-slate-400 text-[11px]">Queue Spillback</span>
-                <p class="text-base font-bold text-slate-900 dark:text-white mt-0.5">24 Vehicles</p>
-                <span class="text-[10px] text-rose-500">+8 veh in 10 mins</span>
+                <p class="text-base font-bold text-slate-900 dark:text-white mt-0.5 font-mono">24 Vehicles</p>
+                <span class="text-[10px] text-rose-500 font-semibold">+8 veh in 10 mins</span>
               </div>
-              <div class="p-3 rounded-xl bg-white dark:bg-slate-900/90 border border-rose-200 dark:border-rose-900/40">
+              <div class="p-3 rounded-xl liquid-glass-subtle border-rose-500/20">
                 <span class="text-slate-400 text-[11px]">Confidence</span>
-                <p class="text-base font-bold text-emerald-500 mt-0.5">High (94%)</p>
+                <p class="text-base font-bold text-emerald-500 mt-0.5 font-mono">High (94%)</p>
                 <span class="text-[10px] text-slate-400">Sensor Reliability: 1.0</span>
               </div>
             </div>
 
-            <div class="text-xs text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900/80 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 leading-relaxed">
+            <div class="text-xs text-slate-600 dark:text-slate-300 liquid-glass-subtle p-3.5 rounded-xl border border-slate-200/60 dark:border-white/10 leading-relaxed">
               <strong>AI Explainability Analysis:</strong> Sudden localized speed drop confirmed. Dry weather (rain = 0.0 mm/h), no scheduled roadworks. Upstream segment exhibits growing queue. 0% false-alarm probability.
             </div>
 
             <!-- Police Action Buttons -->
-            <div class="pt-2 border-t border-rose-200 dark:border-rose-900/40 flex flex-col sm:flex-row items-center gap-3">
-              <button onclick="dispatchOfficer()" id="btn-dispatch" class="w-full sm:w-auto flex-1 py-3 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 active:scale-[0.98] text-white font-bold text-xs shadow-md shadow-rose-600/25 transition-all flex items-center justify-center gap-2">
+            <div class="pt-2 border-t border-rose-200/60 dark:border-rose-900/40 flex flex-col sm:flex-row items-center gap-3">
+              <button onclick="dispatchOfficer()" id="btn-dispatch" class="w-full sm:w-auto flex-1 py-3 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 active:scale-[0.98] text-white font-bold text-xs shadow-md shadow-rose-600/25 transition-all flex items-center justify-center gap-2 font-heading">
                 <i data-lucide="shield" class="w-4 h-4"></i> Dispatch Patrol Unit #7 to Junction N015
               </button>
-              <button onclick="overrideSignal()" id="btn-signal" class="w-full sm:w-auto py-3 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-white font-bold text-xs transition-all flex items-center justify-center gap-2">
+              <button onclick="overrideSignal()" id="btn-signal" class="w-full sm:w-auto py-3 px-4 rounded-xl liquid-glass-subtle hover:bg-slate-200/60 dark:hover:bg-slate-700/60 text-slate-800 dark:text-white font-bold text-xs transition-all flex items-center justify-center gap-2 font-heading">
                 <i data-lucide="sliders" class="w-4 h-4"></i> +15s Green Wave (SIG001)
               </button>
             </div>
-            <div id="police-action-log" class="text-xs text-emerald-500 font-semibold text-center hidden"></div>
+            <div id="police-action-log" class="text-xs text-emerald-500 font-semibold text-center hidden font-mono"></div>
           </div>
         </div>
 
         <!-- Patrol Units & VMS Screen (5 Cols) -->
         <div class="xl:col-span-4 flex flex-col gap-4">
-          <div class="bg-white dark:bg-slate-900/80 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition">
-            <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center justify-between">
+          <div class="liquid-glass p-5 rounded-2xl theme-transition">
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center justify-between font-heading">
               <span class="flex items-center gap-2"><i data-lucide="users" class="w-4 h-4 text-cyan-500"></i> Active Patrol Units</span>
               <span class="text-xs text-slate-400 font-normal">8 On Duty</span>
             </h3>
             <div class="mt-4 space-y-2.5 text-xs">
-              <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+              <div class="p-3 rounded-xl liquid-glass-subtle flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
-                  <span class="w-7 h-7 rounded-lg bg-cyan-500/10 text-cyan-500 flex items-center justify-center font-bold">P-07</span>
+                  <span class="w-7 h-7 rounded-lg bg-cyan-500/10 text-cyan-500 flex items-center justify-center font-bold font-mono">P-07</span>
                   <div>
                     <p class="font-bold text-slate-900 dark:text-white">Junction N015 (Gachibowli)</p>
                     <p class="text-[11px] text-slate-400">Assigned: Clear R0067</p>
@@ -416,9 +471,9 @@
                 </div>
                 <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-500">En Route</span>
               </div>
-              <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+              <div class="p-3 rounded-xl liquid-glass-subtle flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
-                  <span class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold">P-03</span>
+                  <span class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold font-mono">P-03</span>
                   <div>
                     <p class="font-bold text-slate-900 dark:text-white">Junction N022 (Cyber Towers)</p>
                     <p class="text-[11px] text-slate-400">Manual Signal Control</p>
@@ -429,12 +484,12 @@
             </div>
           </div>
 
-          <!-- Variable Message Sign (VMS) Preview -->
-          <div class="bg-white dark:bg-slate-900/80 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition">
-            <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <!-- Variable Message Sign (VMS) Preview with Liquid Glass Frame -->
+          <div class="liquid-glass p-5 rounded-2xl theme-transition">
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2 font-heading">
               <i data-lucide="tv" class="w-4 h-4 text-amber-500"></i> Roadside Variable Message Sign (VMS)
             </h3>
-            <div class="mt-3 p-4 rounded-xl bg-black border-2 border-amber-500/40 text-amber-400 font-mono text-center text-xs tracking-wider shadow-inner">
+            <div class="mt-3 p-4 rounded-xl bg-black/90 backdrop-blur-md border-2 border-amber-500/40 text-amber-400 font-mono text-center text-xs tracking-wider shadow-inner">
               [ ALERT: R0067 BLOCKED AHEAD ]<br>
               [ DIVERSION VIA CYBER BYPASS ]<br>
               [ FOLLOW TRAFFIC POLICE SIGNS ]
@@ -448,15 +503,15 @@
       <div id="view-planner" class="hidden grid-cols-1 xl:grid-cols-12 gap-6 h-full">
         
         <!-- Candidates List (5 Cols) -->
-        <div class="xl:col-span-5 bg-white dark:bg-slate-900/80 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition flex flex-col gap-4">
-          <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+        <div class="xl:col-span-5 liquid-glass p-5 rounded-2xl theme-transition flex flex-col gap-4">
+          <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-white/10 pb-3">
             <div>
-              <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2 font-heading">
                 <i data-lucide="layers" class="w-4 h-4 text-indigo-500"></i> Municipal Planning Candidates
               </h3>
               <p class="text-xs text-slate-400">90 interventions from planning_candidates.csv</p>
             </div>
-            <span class="px-2 py-0.5 text-xs font-bold rounded bg-indigo-500/10 text-indigo-500">GHMC</span>
+            <span class="px-2 py-0.5 text-xs font-bold rounded bg-indigo-500/10 text-indigo-500 font-mono">GHMC</span>
           </div>
 
           <div class="space-y-2.5 overflow-y-auto max-h-[520px] pr-1" id="candidates-list">
@@ -465,76 +520,76 @@
         </div>
 
         <!-- Before/After Simulation Panel (7 Cols) -->
-        <div class="xl:col-span-7 bg-white dark:bg-slate-900/80 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition flex flex-col justify-between">
+        <div class="xl:col-span-7 liquid-glass p-6 rounded-2xl theme-transition flex flex-col justify-between">
           <div>
-            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+            <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-white/10 pb-4">
               <div>
-                <span class="text-xs font-bold text-indigo-500" id="sim-plan-id">CANDIDATE: PLAN0376</span>
-                <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-0.5" id="sim-title">Lane Addition &amp; Road Widening on Segment R0377</h3>
+                <span class="text-xs font-bold text-indigo-500 font-mono" id="sim-plan-id">CANDIDATE: PLAN0376</span>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-0.5 font-heading" id="sim-title">Lane Addition &amp; Road Widening on Segment R0377</h3>
               </div>
               <div class="text-right">
                 <span class="text-xs text-slate-400 font-medium">ROI Score</span>
-                <p class="text-2xl font-extrabold text-emerald-500" id="sim-roi">52.53</p>
+                <p class="text-2xl font-extrabold text-emerald-500 font-mono" id="sim-roi">52.53</p>
               </div>
             </div>
 
             <div class="mt-4 grid grid-cols-3 gap-3 text-xs">
-              <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+              <div class="p-3.5 rounded-xl liquid-glass-subtle">
                 <span class="text-slate-400">Intervention</span>
                 <p class="text-xs font-bold text-slate-900 dark:text-white mt-1" id="sim-type">Lane Addition (+1 Lane)</p>
               </div>
-              <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+              <div class="p-3.5 rounded-xl liquid-glass-subtle">
                 <span class="text-slate-400">Capacity Upgrade</span>
-                <p class="text-xs font-bold text-emerald-500 mt-1" id="sim-delta">+500 veh/hr</p>
+                <p class="text-xs font-bold text-emerald-500 mt-1 font-mono" id="sim-delta">+500 veh/hr</p>
               </div>
-              <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+              <div class="p-3.5 rounded-xl liquid-glass-subtle">
                 <span class="text-slate-400">Cost &amp; Feasibility</span>
                 <p class="text-xs font-bold text-slate-900 dark:text-white mt-1" id="sim-cost">Cost Index: 12 (Medium)</p>
               </div>
             </div>
 
-            <!-- Before vs After Box -->
-            <div class="mt-5 p-5 rounded-2xl bg-gradient-to-r from-rose-500/5 via-slate-500/5 to-emerald-500/5 border border-slate-200 dark:border-slate-800">
-              <h4 class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-4">BPR Equilibrium: Before vs After</h4>
+            <!-- Before vs After Box with Liquid Glass Backdrop -->
+            <div class="mt-5 p-5 rounded-2xl bg-white/40 dark:bg-slate-800/40 border border-slate-200/70 dark:border-white/10 backdrop-blur-md">
+              <h4 class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-4 font-heading">BPR Equilibrium: Before vs After</h4>
               
               <div class="grid grid-cols-2 gap-6">
                 <div class="space-y-3">
-                  <span class="px-2.5 py-1 rounded text-xs font-bold bg-rose-500/10 text-rose-500 border border-rose-500/20">BEFORE (Status Quo)</span>
+                  <span class="px-2.5 py-1 rounded text-xs font-bold bg-rose-500/10 text-rose-500 border border-rose-500/20 font-mono">BEFORE (Status Quo)</span>
                   <div>
                     <p class="text-xs text-slate-400">Peak Speed</p>
-                    <p class="text-xl font-bold text-rose-600 dark:text-rose-400" id="sim-before-speed">18.4 km/h</p>
+                    <p class="text-xl font-bold text-rose-600 dark:text-rose-400 font-mono" id="sim-before-speed">18.4 km/h</p>
                   </div>
                   <div>
                     <p class="text-xs text-slate-400">Monthly Delay Incurred</p>
-                    <p class="text-sm font-semibold text-slate-700 dark:text-slate-300" id="sim-before-delay">1,840.5 Veh-Hours</p>
+                    <p class="text-sm font-semibold text-slate-700 dark:text-slate-300 font-mono" id="sim-before-delay">1,840.5 Veh-Hours</p>
                   </div>
                 </div>
 
                 <div class="space-y-3">
-                  <span class="px-2.5 py-1 rounded text-xs font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">AFTER (Road Widened)</span>
+                  <span class="px-2.5 py-1 rounded text-xs font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-mono">AFTER (Road Widened)</span>
                   <div>
                     <p class="text-xs text-slate-400">Upgraded Speed</p>
-                    <p class="text-xl font-bold text-emerald-500" id="sim-after-speed">41.2 km/h</p>
+                    <p class="text-xl font-bold text-emerald-500 font-mono" id="sim-after-speed">41.2 km/h</p>
                   </div>
                   <div>
                     <p class="text-xs text-slate-400">Monthly Delay Incurred</p>
-                    <p class="text-sm font-semibold text-slate-700 dark:text-slate-300" id="sim-after-delay">1,210.2 Veh-Hours</p>
+                    <p class="text-sm font-semibold text-slate-700 dark:text-slate-300 font-mono" id="sim-after-delay">1,210.2 Veh-Hours</p>
                   </div>
                 </div>
               </div>
 
-              <div class="mt-5 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
+              <div class="mt-5 pt-4 border-t border-slate-200/60 dark:border-white/10 flex items-center justify-between text-xs">
                 <span class="font-medium text-slate-400">Total Commuter Delay Saved Monthly:</span>
-                <span class="text-sm font-extrabold text-emerald-500" id="sim-saved">630.3 Vehicle-Hours Saved</span>
+                <span class="text-sm font-extrabold text-emerald-500 font-mono" id="sim-saved">630.3 Vehicle-Hours Saved</span>
               </div>
             </div>
           </div>
 
-          <div class="mt-6 flex items-center justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
-            <button onclick="exportDPR()" class="py-2.5 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 transition-colors flex items-center gap-1.5">
+          <div class="mt-6 flex items-center justify-end gap-3 pt-4 border-t border-slate-200/60 dark:border-white/10">
+            <button onclick="exportDPR()" class="py-2.5 px-4 rounded-xl liquid-glass-subtle hover:bg-slate-200/60 dark:hover:bg-slate-700/60 text-xs font-semibold text-slate-700 dark:text-slate-300 transition-colors flex items-center gap-1.5 font-heading">
               <i data-lucide="download" class="w-3.5 h-3.5"></i> Export Detailed Project Report (DPR)
             </button>
-            <button onclick="runCustomSimulation()" class="py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-bold text-white shadow-md shadow-indigo-600/20 transition-all flex items-center gap-1.5">
+            <button onclick="runCustomSimulation()" class="py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-xs font-bold text-white shadow-md shadow-indigo-600/20 transition-all flex items-center gap-1.5 font-heading">
               <i data-lucide="play" class="w-3.5 h-3.5"></i> Recalculate Equilibrium
             </button>
           </div>
@@ -545,20 +600,20 @@
       <!-- ================= PORTAL 4: 15-60M FORECASTER ================= -->
       <div id="view-forecast" class="hidden grid-cols-1 xl:grid-cols-12 gap-6 h-full">
         
-        <div class="xl:col-span-8 bg-white dark:bg-slate-900/80 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition flex flex-col gap-5">
-          <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+        <div class="xl:col-span-8 liquid-glass p-6 rounded-2xl theme-transition flex flex-col gap-5">
+          <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-white/10 pb-4">
             <div>
-              <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2 font-heading">
                 <i data-lucide="line-chart" class="w-4 h-4 text-cyan-500"></i> Direct Multi-Horizon Speed Forecaster
               </h3>
               <p class="text-xs text-slate-400 mt-0.5">LightGBM residual models with 90% Conformal Uncertainty bounds</p>
             </div>
             
-            <div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center text-xs font-semibold">
-              <button onclick="changeHorizon('15m')" id="h-15m" class="px-3 py-1 rounded-lg bg-white dark:bg-slate-900 shadow-sm text-cyan-600 dark:text-cyan-400">15 min</button>
-              <button onclick="changeHorizon('30m')" id="h-30m" class="px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white">30 min</button>
-              <button onclick="changeHorizon('45m')" id="h-45m" class="px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white">45 min</button>
-              <button onclick="changeHorizon('60m')" id="h-60m" class="px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white">60 min</button>
+            <div class="liquid-glass-subtle p-1 rounded-xl flex items-center text-xs font-semibold">
+              <button onclick="changeHorizon('15m')" id="h-15m" class="px-3 py-1 rounded-lg bg-white/90 dark:bg-slate-900/90 shadow-sm text-cyan-600 dark:text-cyan-400 font-mono font-bold">15 min</button>
+              <button onclick="changeHorizon('30m')" id="h-30m" class="px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white font-mono">30 min</button>
+              <button onclick="changeHorizon('45m')" id="h-45m" class="px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white font-mono">45 min</button>
+              <button onclick="changeHorizon('60m')" id="h-60m" class="px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white font-mono">60 min</button>
             </div>
           </div>
 
@@ -566,19 +621,19 @@
             <canvas id="forecastChart" class="w-full h-full"></canvas>
           </div>
 
-          <div class="flex items-center justify-between text-xs text-slate-500 border-t border-slate-200 dark:border-slate-800 pt-3">
+          <div class="flex items-center justify-between text-xs text-slate-500 border-t border-slate-200/60 dark:border-white/10 pt-3">
             <div class="flex items-center gap-4">
               <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-slate-400"></span> Historical Baseline</span>
               <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-cyan-500"></span> AI Prediction</span>
               <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-cyan-500/20 rounded"></span> 90% Conformal Interval (&plusmn;17.6 km/h)</span>
             </div>
-            <span class="text-emerald-500 font-semibold">90.7% Test Coverage (Zero Overfitting)</span>
+            <span class="text-emerald-500 font-semibold font-mono">90.7% Test Coverage (Zero Overfitting)</span>
           </div>
         </div>
 
         <div class="xl:col-span-4 flex flex-col gap-4">
-          <div class="bg-white dark:bg-slate-900/80 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition">
-            <h4 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <div class="liquid-glass p-5 rounded-2xl theme-transition">
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2 font-heading">
               <i data-lucide="sparkles" class="w-4 h-4 text-cyan-500"></i> Top SHAP Feature Drivers
             </h4>
             <p class="text-xs text-slate-400 mt-1">Factors driving the multi-horizon prediction</p>
@@ -587,47 +642,47 @@
               <div>
                 <div class="flex justify-between font-medium">
                   <span class="text-slate-700 dark:text-slate-300">Upstream Corridor Flow Pressure</span>
-                  <span class="text-cyan-500 font-bold">+34% impact</span>
+                  <span class="text-cyan-500 font-bold font-mono">+34% impact</span>
                 </div>
-                <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                <div class="w-full bg-slate-200/50 dark:bg-slate-800/80 h-1.5 rounded-full mt-1.5 overflow-hidden">
                   <div class="bg-cyan-500 h-full rounded-full" style="width: 82%"></div>
                 </div>
               </div>
               <div>
                 <div class="flex justify-between font-medium">
                   <span class="text-slate-700 dark:text-slate-300">Historical Hour-of-Week Baseline</span>
-                  <span class="text-blue-500 font-bold">+28% impact</span>
+                  <span class="text-blue-500 font-bold font-mono">+28% impact</span>
                 </div>
-                <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                <div class="w-full bg-slate-200/50 dark:bg-slate-800/80 h-1.5 rounded-full mt-1.5 overflow-hidden">
                   <div class="bg-blue-500 h-full rounded-full" style="width: 68%"></div>
                 </div>
               </div>
               <div>
                 <div class="flex justify-between font-medium">
                   <span class="text-slate-700 dark:text-slate-300">Speed Trend Delta (t - 15m)</span>
-                  <span class="text-indigo-500 font-bold">+19% impact</span>
+                  <span class="text-indigo-500 font-bold font-mono">+19% impact</span>
                 </div>
-                <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                <div class="w-full bg-slate-200/50 dark:bg-slate-800/80 h-1.5 rounded-full mt-1.5 overflow-hidden">
                   <div class="bg-indigo-500 h-full rounded-full" style="width: 48%"></div>
                 </div>
               </div>
               <div>
                 <div class="flex justify-between font-medium">
                   <span class="text-slate-700 dark:text-slate-300">Sensor Telemetry Quality</span>
-                  <span class="text-emerald-500 font-bold">1.0 (Optimal)</span>
+                  <span class="text-emerald-500 font-bold font-mono">1.0 (Optimal)</span>
                 </div>
-                <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                <div class="w-full bg-slate-200/50 dark:bg-slate-800/80 h-1.5 rounded-full mt-1.5 overflow-hidden">
                   <div class="bg-emerald-500 h-full rounded-full" style="width: 100%"></div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="bg-white dark:bg-slate-900/80 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition">
-            <h4 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <div class="liquid-glass p-5 rounded-2xl theme-transition">
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2 font-heading">
               <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i> Model Validation Audit
             </h4>
-            <ul class="mt-3 space-y-2 text-xs text-slate-500 dark:text-slate-400">
+            <ul class="mt-3 space-y-2 text-xs text-slate-500 dark:text-slate-400 font-mono">
               <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> Overfitting Gap: 0.74 km/h (Pass)</li>
               <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> Beats Persistence Baseline by +18.4%</li>
               <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> 11.0 ms Snapshot Inference Latency</li>
@@ -981,7 +1036,33 @@
       alert("Equilibrium recalculated with BPR alpha=0.15, beta=4.0. Throughput +18.2%.");
     }
 
-    // ================= 7. ANIMATED DRONE PATROL BACKGROUND CANVAS =================
+    // ================= 7. COLLAPSIBLE SIDEBAR TOGGLE =================
+    let isSidebarOpen = true;
+    function toggleSidebar() {
+      const sidebar = document.getElementById('main-sidebar');
+      if (!sidebar) return;
+      isSidebarOpen = !isSidebarOpen;
+
+      if (isSidebarOpen) {
+        sidebar.style.marginLeft = '0px';
+        sidebar.style.width = '18rem';
+        sidebar.style.opacity = '1';
+        sidebar.style.pointerEvents = 'auto';
+      } else {
+        sidebar.style.marginLeft = '-18rem';
+        sidebar.style.width = '0px';
+        sidebar.style.opacity = '0';
+        sidebar.style.pointerEvents = 'none';
+      }
+
+      // Smoothly trigger Leaflet map and forecast canvas re-layout
+      setTimeout(() => {
+        if (mapInstance) mapInstance.invalidateSize();
+        if (currentPortal === 'forecast') renderForecastChart('15m');
+      }, 320);
+    }
+
+    // ================= 8. REALISTIC AERIAL SURVEILLANCE DRONE & HIGHWAY ENGINE =================
     function initDroneAnimation() {
       const canvas = document.getElementById('drone-canvas');
       if (!canvas) return;
@@ -994,74 +1075,345 @@
         h = canvas.height = window.innerHeight;
       });
 
-      // 3 Autonomous surveillance drones
+      // 3 High-Fidelity Autonomous Surveillance Quadcopter Drones
       const drones = [
-        { x: w * 0.2, y: h * 0.3, vx: 0.7, vy: 0.4, angle: 0, label: "DRONE-01 (HITEC)" },
-        { x: w * 0.6, y: h * 0.5, vx: -0.5, vy: 0.6, angle: 0, label: "DRONE-02 (GACHIBOWLI)" },
-        { x: w * 0.8, y: h * 0.2, vx: -0.6, vy: -0.5, angle: 0, label: "DRONE-03 (ORR)" }
+        {
+          id: "DRONE-01",
+          callsign: "AIR-PATROL 1",
+          mission: "INCIDENT OVERWATCH • R0067",
+          x: w * 0.28,
+          y: h * 0.35,
+          speed: 1.3,
+          angle: 0.4,
+          radius: 26,
+          altitude: "85m",
+          battery: 92,
+          strobePhase: 0,
+          waypoints: [
+            { x: w * 0.2, y: h * 0.2 },
+            { x: w * 0.45, y: h * 0.38 },
+            { x: w * 0.72, y: h * 0.25 },
+            { x: w * 0.55, y: h * 0.65 },
+            { x: w * 0.15, y: h * 0.55 }
+          ],
+          wpIndex: 1
+        },
+        {
+          id: "DRONE-02",
+          callsign: "TACTICAL HAWK 2",
+          mission: "CORRIDOR CONGESTION SCAN",
+          x: w * 0.72,
+          y: h * 0.55,
+          speed: 1.1,
+          angle: 2.2,
+          radius: 24,
+          altitude: "105m",
+          battery: 86,
+          strobePhase: 14,
+          waypoints: [
+            { x: w * 0.85, y: h * 0.35 },
+            { x: w * 0.60, y: h * 0.70 },
+            { x: w * 0.35, y: h * 0.80 },
+            { x: w * 0.75, y: h * 0.85 }
+          ],
+          wpIndex: 0
+        },
+        {
+          id: "DRONE-03",
+          callsign: "ORR AIR-WING 3",
+          mission: "EXPRESSWAY SPEED RADAR",
+          x: w * 0.45,
+          y: h * 0.80,
+          speed: 1.5,
+          angle: -1.4,
+          radius: 25,
+          altitude: "95m",
+          battery: 79,
+          strobePhase: 28,
+          waypoints: [
+            { x: w * 0.10, y: h * 0.85 },
+            { x: w * 0.88, y: h * 0.65 },
+            { x: w * 0.50, y: h * 0.15 },
+            { x: w * 0.30, y: h * 0.45 }
+          ],
+          wpIndex: 2
+        }
       ];
 
-      // Highway traffic flow pulses
+      // Highway arterial traffic flow pulses
       const pulses = [];
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 28; i++) {
         pulses.push({
           x: Math.random() * w,
           y: Math.random() * h,
-          speed: 1 + Math.random() * 2,
-          radius: 1 + Math.random() * 2
+          vx: (Math.random() > 0.5 ? 1 : -1) * (0.8 + Math.random() * 1.5),
+          vy: (Math.random() > 0.5 ? 1 : -1) * (0.4 + Math.random() * 0.8),
+          size: 1.5 + Math.random() * 2
         });
       }
 
+      let frame = 0;
+
+      // Realistic Quadcopter Drawer
+      function drawRealisticDrone(d, isDark) {
+        ctx.save();
+        ctx.translate(d.x, d.y);
+        ctx.rotate(d.angle);
+
+        const r = d.radius;
+
+        // 1. VOLUMETRIC LIDAR / SEARCHLIGHT CONE
+        // Projects forward illuminating the road and refracts through liquid glass
+        const coneLen = 135;
+        const coneSpread = 65;
+        const lightGrad = ctx.createRadialGradient(0, 0, 8, 0, coneLen * 0.6, coneLen);
+        if (isDark) {
+          lightGrad.addColorStop(0, 'rgba(6, 182, 212, 0.45)');
+          lightGrad.addColorStop(0.35, 'rgba(6, 182, 212, 0.22)');
+          lightGrad.addColorStop(1, 'rgba(6, 182, 212, 0)');
+        } else {
+          lightGrad.addColorStop(0, 'rgba(8, 145, 178, 0.38)');
+          lightGrad.addColorStop(0.35, 'rgba(8, 145, 178, 0.18)');
+          lightGrad.addColorStop(1, 'rgba(8, 145, 178, 0)');
+        }
+
+        ctx.fillStyle = lightGrad;
+        ctx.beginPath();
+        ctx.moveTo(0, 6);
+        ctx.lineTo(-coneSpread, coneLen);
+        ctx.quadraticCurveTo(0, coneLen + 18, coneSpread, coneLen);
+        ctx.closePath();
+        ctx.fill();
+
+        // Laser radar sweep beam inside cone
+        const sweepY = (frame * 1.8) % coneLen;
+        const currentSweepSpread = (sweepY / coneLen) * coneSpread;
+        ctx.strokeStyle = isDark ? 'rgba(34, 211, 238, 0.7)' : 'rgba(8, 145, 178, 0.6)';
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.moveTo(-currentSweepSpread, sweepY);
+        ctx.lineTo(currentSweepSpread, sweepY);
+        ctx.stroke();
+
+        // 2. DOWNWASH CONCENTRIC AIR RIPPLES
+        const rippleR = (frame * 0.7) % 36;
+        ctx.strokeStyle = isDark 
+          ? `rgba(6, 182, 212, ${0.35 * (1 - rippleR / 36)})` 
+          : `rgba(8, 145, 178, ${0.30 * (1 - rippleR / 36)})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(0, 0, rippleR, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // 4 Rotor coordinates relative to center
+        const armOffset = r * 0.92;
+        const rotors = [
+          { x: -armOffset * 0.7, y: armOffset * 0.7, isLeft: true },   // Front-Left (Port)
+          { x: armOffset * 0.7, y: armOffset * 0.7, isLeft: false },   // Front-Right (Starboard)
+          { x: -armOffset * 0.7, y: -armOffset * 0.7, isLeft: true },  // Rear-Left
+          { x: armOffset * 0.7, y: -armOffset * 0.7, isLeft: false }   // Rear-Right
+        ];
+
+        // 3. CARBON FIBER STRUCTURAL ROTOR ARMS
+        ctx.strokeStyle = isDark ? '#1e293b' : '#64748b';
+        ctx.lineWidth = 4;
+        ctx.lineCap = 'round';
+        rotors.forEach(rt => {
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(rt.x, rt.y);
+          ctx.stroke();
+        });
+
+        // High-tech neon accents on arms
+        ctx.strokeStyle = isDark ? '#38bdf8' : '#0284c7';
+        ctx.lineWidth = 1.4;
+        rotors.forEach(rt => {
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(rt.x * 0.65, rt.y * 0.65);
+          ctx.stroke();
+        });
+
+        // 4. BRUSHLESS MOTORS & PROPELLER BLUR DISCS
+        const propR = r * 0.65;
+        rotors.forEach((rt, idx) => {
+          // Titanium motor bell
+          ctx.fillStyle = isDark ? '#0f172a' : '#334155';
+          ctx.beginPath();
+          ctx.arc(rt.x, rt.y, 4.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = isDark ? '#06b6d4' : '#0891b2';
+          ctx.lineWidth = 1.2;
+          ctx.stroke();
+
+          // Translucent high-speed spinning prop blur disc
+          const discGrad = ctx.createRadialGradient(rt.x, rt.y, 2, rt.x, rt.y, propR);
+          discGrad.addColorStop(0, isDark ? 'rgba(6, 182, 212, 0.45)' : 'rgba(8, 145, 178, 0.38)');
+          discGrad.addColorStop(0.7, isDark ? 'rgba(56, 189, 248, 0.18)' : 'rgba(14, 116, 144, 0.16)');
+          discGrad.addColorStop(1, 'rgba(6, 182, 212, 0)');
+          ctx.fillStyle = discGrad;
+          ctx.beginPath();
+          ctx.arc(rt.x, rt.y, propR, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Spinning dual-blade propeller motion
+          const bladeAngle = (frame * (idx % 2 === 0 ? 0.4 : -0.4)) + idx * 1.5;
+          ctx.save();
+          ctx.translate(rt.x, rt.y);
+          ctx.rotate(bladeAngle);
+          ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.85)' : 'rgba(15, 23, 42, 0.65)';
+          ctx.lineWidth = 1.8;
+          ctx.beginPath();
+          ctx.moveTo(-propR * 0.9, 0);
+          ctx.lineTo(propR * 0.9, 0);
+          ctx.stroke();
+          ctx.restore();
+        });
+
+        // 5. AERODYNAMIC CARBON FIBER FUSELAGE
+        ctx.save();
+        ctx.shadowColor = isDark ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.35)';
+        ctx.shadowBlur = 14;
+        ctx.shadowOffsetY = 4;
+
+        const bodyGrad = ctx.createLinearGradient(0, -r * 0.8, 0, r * 0.8);
+        if (isDark) {
+          bodyGrad.addColorStop(0, '#334155');
+          bodyGrad.addColorStop(0.5, '#1e293b');
+          bodyGrad.addColorStop(1, '#0f172a');
+        } else {
+          bodyGrad.addColorStop(0, '#e2e8f0');
+          bodyGrad.addColorStop(0.5, '#94a3b8');
+          bodyGrad.addColorStop(1, '#64748b');
+        }
+        ctx.fillStyle = bodyGrad;
+
+        // Hexagonal aerodynamic body profile
+        ctx.beginPath();
+        ctx.moveTo(0, r * 0.9);           // Nose
+        ctx.lineTo(r * 0.42, r * 0.35);    // Front-Right shoulder
+        ctx.lineTo(r * 0.36, -r * 0.55);   // Rear-Right flank
+        ctx.lineTo(0, -r * 0.78);          // Tail empennage
+        ctx.lineTo(-r * 0.36, -r * 0.55);  // Rear-Left flank
+        ctx.lineTo(-r * 0.42, r * 0.35);   // Front-Left shoulder
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.strokeStyle = isDark ? '#38bdf8' : '#0284c7';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+        ctx.restore();
+
+        // Central avionics canopy with sapphire tint
+        ctx.fillStyle = isDark ? '#0284c7' : '#0369a1';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, r * 0.18, r * 0.34, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 4K Optical Gimbal Camera lens on nose
+        ctx.fillStyle = '#06b6d4';
+        ctx.beginPath();
+        ctx.arc(0, r * 0.76, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(-1, r * 0.76 - 1, 1.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 6. FAA TACTICAL FLASHING STROBES
+        const strobeTick = (frame + d.strobePhase) % 40;
+
+        // Front Right: Green Navigation Beacon
+        const greenActive = strobeTick < 22;
+        ctx.fillStyle = greenActive ? '#10b981' : 'rgba(16, 185, 129, 0.2)';
+        ctx.shadowColor = '#10b981';
+        ctx.shadowBlur = greenActive ? 12 : 2;
+        ctx.beginPath();
+        ctx.arc(armOffset * 0.7, armOffset * 0.7, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Front Left: Red Navigation Beacon
+        const redActive = strobeTick < 22;
+        ctx.fillStyle = redActive ? '#ef4444' : 'rgba(239, 68, 68, 0.2)';
+        ctx.shadowColor = '#ef4444';
+        ctx.shadowBlur = redActive ? 12 : 2;
+        ctx.beginPath();
+        ctx.arc(-armOffset * 0.7, armOffset * 0.7, 3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Tail: High-Intensity White Flash
+        if (strobeTick > 35) {
+          ctx.fillStyle = '#ffffff';
+          ctx.shadowColor = '#ffffff';
+          ctx.shadowBlur = 14;
+          ctx.beginPath();
+          ctx.arc(0, -r * 0.78, 3.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.restore();
+
+        // 7. TACTICAL HUD VECTOR TAG (Always screen-aligned)
+        ctx.save();
+        ctx.font = "bold 9px 'JetBrains Mono', monospace";
+        ctx.fillStyle = isDark ? '#38bdf8' : '#0369a1';
+        ctx.fillText(`▲ ${d.callsign}`, d.x + r + 6, d.y - 7);
+
+        ctx.font = "8px 'JetBrains Mono', monospace";
+        ctx.fillStyle = isDark ? 'rgba(148, 163, 184, 0.85)' : 'rgba(71, 85, 105, 0.9)';
+        ctx.fillText(d.mission, d.x + r + 6, d.y + 5);
+        ctx.fillText(`ALT: ${d.altitude} • BATT: ${d.battery}%`, d.x + r + 6, d.y + 16);
+        ctx.restore();
+      }
+
+      // Continuous Physics & Waypoint Spline Patrol Loop
       function animate() {
         ctx.clearRect(0, 0, w, h);
+        frame++;
 
-        // Draw highway traffic pulses
-        ctx.fillStyle = currentTheme === 'dark' ? 'rgba(6, 182, 212, 0.4)' : 'rgba(6, 182, 212, 0.3)';
+        const isDark = document.documentElement.classList.contains('dark');
+
+        // Draw Highway Traffic Pulses
+        ctx.fillStyle = isDark ? 'rgba(6, 182, 212, 0.35)' : 'rgba(8, 145, 178, 0.28)';
         pulses.forEach(p => {
-          p.x += p.speed;
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0) p.x = w;
           if (p.x > w) p.x = 0;
+          if (p.y < 0) p.y = h;
+          if (p.y > h) p.y = 0;
+
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
           ctx.fill();
         });
 
-        // Update and draw Drones
+        // Update and Render Realistic Drones
         drones.forEach(d => {
-          d.x += d.vx;
-          d.y += d.vy;
-          d.angle += 0.02;
+          const target = d.waypoints[d.wpIndex];
+          const dx = target.x - d.x;
+          const dy = target.y - d.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (d.x < 50 || d.x > w - 50) d.vx *= -1;
-          if (d.y < 50 || d.y > h - 50) d.vy *= -1;
+          if (dist < 30) {
+            d.wpIndex = (d.wpIndex + 1) % d.waypoints.length;
+          }
 
-          // Drone radar scanning cone
-          ctx.save();
-          ctx.translate(d.x, d.y);
-          ctx.rotate(d.angle);
+          // Smooth turning towards next waypoint (converts angle 0 to nose facing direction)
+          const targetAngle = Math.atan2(dy, dx) - Math.PI / 2;
+          let diff = targetAngle - d.angle;
+          while (diff < -Math.PI) diff += Math.PI * 2;
+          while (diff > Math.PI) diff -= Math.PI * 2;
+          d.angle += diff * 0.035;
 
-          const grad = ctx.createRadialGradient(0, 0, 5, 0, 0, 70);
-          grad.addColorStop(0, currentTheme === 'dark' ? 'rgba(6, 182, 212, 0.3)' : 'rgba(6, 182, 212, 0.25)');
-          grad.addColorStop(1, 'rgba(6, 182, 212, 0)');
-          
-          ctx.fillStyle = grad;
-          ctx.beginPath();
-          ctx.moveTo(0, 0);
-          ctx.arc(0, 0, 70, 0, Math.PI / 3);
-          ctx.closePath();
-          ctx.fill();
+          // Move forward along drone nose orientation
+          const moveAngle = d.angle + Math.PI / 2;
+          d.x += Math.cos(moveAngle) * d.speed;
+          d.y += Math.sin(moveAngle) * d.speed;
 
-          ctx.restore();
-
-          // Drone body icon
-          ctx.fillStyle = currentTheme === 'dark' ? '#06b6d4' : '#0891b2';
-          ctx.beginPath();
-          ctx.arc(d.x, d.y, 4, 0, Math.PI * 2);
-          ctx.fill();
-
-          // Drone Label
-          ctx.font = "9px 'JetBrains Mono', monospace";
-          ctx.fillStyle = currentTheme === 'dark' ? 'rgba(148, 163, 184, 0.7)' : 'rgba(71, 85, 105, 0.8)';
-          ctx.fillText(d.label, d.x + 8, d.y + 3);
+          // Draw the realistic quadcopter drone with all searchlights & strobes
+          drawRealisticDrone(d, isDark);
         });
 
         requestAnimationFrame(animate);
