@@ -32,8 +32,8 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <!-- Leaflet GIS Map -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <!-- Local Network Data (Offline & CORS-Free) -->
   <script src="network_data.js"></script>
@@ -336,8 +336,8 @@
             </div>
           </div>
 
-          <!-- Leaflet Container -->
-          <div id="map-commuter" class="flex-1 w-full z-0"></div>
+          <!-- Leaflet Container with Explicit Minimum Height -->
+          <div id="map-commuter" class="flex-1 w-full z-0 min-h-[560px] relative" style="min-height: 560px; height: 100%; width: 100%;"></div>
 
           <!-- Floating Map Legend with Liquid Glass -->
           <div class="absolute bottom-4 left-4 z-10 liquid-glass px-3.5 py-2 rounded-xl text-xs flex items-center gap-4">
@@ -800,6 +800,20 @@
     let currentTileLayer = null;
 
     function initMap() {
+      // 1. Guard against blocked CDN
+      if (typeof L === 'undefined') {
+        const container = document.getElementById('map-commuter');
+        if (container) {
+          container.innerHTML = `
+            <div class="flex flex-col items-center justify-center h-full p-8 text-center bg-slate-900/40 text-slate-300">
+              <p class="font-bold text-amber-400 mb-2 font-heading">Leaflet GIS Offline</p>
+              <p class="text-xs text-slate-400 max-w-md">Could not load Leaflet map library from CDN. Please verify internet connectivity.</p>
+            </div>
+          `;
+        }
+        return;
+      }
+
       // Centered on Hyderabad
       const center = [17.345, 78.410];
       mapInstance = L.map('map-commuter', {
@@ -810,6 +824,13 @@
       });
 
       updateMapTiles();
+
+      // Enforce map dimension re-calculation across all browser render cycles
+      [80, 250, 600, 1200].forEach(delay => {
+        setTimeout(() => {
+          if (mapInstance) mapInstance.invalidateSize();
+        }, delay);
+      });
 
       // Load network data
       if (window.CITYFLOW_NETWORK_DATA) {
@@ -830,21 +851,43 @@
 
     function updateMapTiles() {
       if (!mapInstance) return;
-      if (currentTileLayer) mapInstance.removeLayer(currentTileLayer);
+      if (currentTileLayer) {
+        try { mapInstance.removeLayer(currentTileLayer); } catch(e) {}
+      }
 
       const isDark = document.documentElement.classList.contains('dark');
       
-      // Clean, free, non-watermarked tile endpoints:
-      // Dark: Esri World Dark Gray Base (100% free, crisp, zero watermark, zero key needed)
-      // Light: OpenStreetMap standard (100% free, crisp, zero watermark)
-      const tileUrl = isDark 
-        ? 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'
+      // Zero-key, ultra-reliable tile endpoints with subdomains:
+      // Dark: CartoDB Dark Matter (crisp dark styling, fast 4-node CDN)
+      // Light: Standard OpenStreetMap (pure community OSM tiles)
+      const primaryUrl = isDark 
+        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
         : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 
-      currentTileLayer = L.tileLayer(tileUrl, { 
-        maxZoom: 18,
-        attribution: '&copy; Esri & OpenStreetMap contributors'
+      const fallbackUrl = isDark
+        ? 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}'
+        : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+
+      currentTileLayer = L.tileLayer(primaryUrl, { 
+        subdomains: 'abcd',
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap & CartoDB'
       }).addTo(mapInstance);
+
+      // Automatic failover if primary tiles are restricted by local firewall/adblocker
+      let failedTilesCount = 0;
+      currentTileLayer.on('tileerror', function() {
+        failedTilesCount++;
+        if (failedTilesCount === 3) {
+          console.warn("Primary tile endpoint unreachable. Switching to backup tile provider...");
+          try { mapInstance.removeLayer(currentTileLayer); } catch(e) {}
+          currentTileLayer = L.tileLayer(fallbackUrl, {
+            subdomains: 'abcd',
+            maxZoom: 18,
+            attribution: '&copy; Map Providers'
+          }).addTo(mapInstance);
+        }
+      });
     }
 
     function renderNetwork(data) {
@@ -1441,6 +1484,7 @@
     });
 
     window.addEventListener('resize', () => {
+      if (mapInstance) mapInstance.invalidateSize();
       if (currentPortal === 'forecast') renderForecastChart('15m');
     });
   </script>
