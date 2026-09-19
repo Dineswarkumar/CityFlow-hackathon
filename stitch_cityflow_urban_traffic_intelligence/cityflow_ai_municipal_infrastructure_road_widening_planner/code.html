@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CityFlow AI - Long-Term Capital Infrastructure Planning (GHMC)</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-primary": "#003640",
+            "secondary-container": "#00a572",
+            "secondary-fixed-dim": "#4edea3",
+            "tertiary-container": "#e79400",
+            "on-tertiary": "#472a00",
+            "surface": "#0c1322",
+            "surface-container-lowest": "#070e1d",
+            "tertiary": "#ffb95f",
+            "on-tertiary-container": "#563400",
+            "on-surface-variant": "#bcc9cd",
+            "tertiary-fixed": "#ffddb8",
+            "surface-container-highest": "#2e3545",
+            "surface-container": "#191f2f",
+            "on-secondary-container": "#00311f",
+            "on-tertiary-fixed": "#2a1700",
+            "surface-container-high": "#232a3a",
+            "surface-dim": "#0c1322",
+            "on-primary-fixed": "#001f26",
+            "error-container": "#93000a",
+            "background": "#0c1322",
+            "primary-container": "#06b6d4",
+            "error": "#ffb4ab",
+            "on-primary-container": "#00424f",
+            "outline": "#869397",
+            "on-error-container": "#ffdad6",
+            "surface-variant": "#2e3545",
+            "surface-container-low": "#141b2b",
+            "on-background": "#dce2f7",
+            "surface-bright": "#323949",
+            "primary-fixed-dim": "#4cd7f6",
+            "on-surface": "#dce2f7",
+            "on-secondary-fixed-variant": "#005236",
+            "tertiary-fixed-dim": "#ffb95f",
+            "inverse-on-surface": "#293040",
+            "secondary": "#4edea3",
+            "on-secondary-fixed": "#002113",
+            "primary-fixed": "#acedff",
+            "secondary-fixed": "#6ffbbe",
+            "on-tertiary-fixed-variant": "#653e00",
+            "outline-variant": "#3d494c",
+            "inverse-primary": "#00687a",
+            "primary": "#4cd7f6",
+            "on-error": "#690005",
+            "on-secondary": "#003824",
+            "on-primary-fixed-variant": "#004e5c",
+            "inverse-surface": "#dce2f7",
+            "surface-tint": "#4cd7f6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "fontFamily": {
+            "display-lg": ["Inter"],
+            "headline-sm": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-lg": ["Inter"],
+            "label-code": ["JetBrains Mono"],
+            "label-telemetry": ["JetBrains Mono"],
+            "label-badge": ["JetBrains Mono"],
+            "body-sm": ["Inter"],
+            "body-md": ["Inter"],
+            "headline-md": ["Inter"]
+          },
+          "fontSize": {
+            "display-lg": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "headline-sm": ["16px", { lineHeight: "24px", fontWeight: "600" }],
+            "body-lg": ["15px", { lineHeight: "22px", fontWeight: "400" }],
+            "headline-lg": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }],
+            "label-code": ["13px", { lineHeight: "18px", letterSpacing: "0.02em", fontWeight: "500" }],
+            "label-telemetry": ["11px", { lineHeight: "14px", letterSpacing: "0.05em", fontWeight: "500" }],
+            "label-badge": ["10px", { lineHeight: "12px", letterSpacing: "0.08em", fontWeight: "700" }],
+            "body-sm": ["12px", { lineHeight: "16px", fontWeight: "400" }],
+            "body-md": ["13px", { lineHeight: "18px", fontWeight: "400" }],
+            "headline-md": ["20px", { lineHeight: "28px", fontWeight: "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .tactical-grid {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0c1322;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #2e3545;
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #4cd7f6;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface tactical-grid min-h-screen flex flex-col font-body-md selection:bg-primary/20 selection:text-primary">
+<!-- ==================== TOP NAV BAR (SHARED COMPONENT) ==================== -->
+<header class="bg-surface/80 dark:bg-surface/80 backdrop-blur-md shadow-sm fixed top-0 left-0 right-0 z-50 flex justify-between items-center w-full px-6 py-3 border-b border-outline-variant/30">
+<div class="flex items-center gap-6">
+<!-- Brand Logo -->
+<div class="text-headline-sm font-headline-sm font-bold tracking-tight text-primary dark:text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="polyline">polyline</span>
+<span>CityFlow AI</span>
+<span class="text-label-telemetry font-label-telemetry bg-surface-container-high text-primary px-2 py-0.5 rounded border border-primary/30 ml-2">GHMC.SECTOR-04</span>
+</div>
+<!-- Search Bar -->
+<div class="hidden lg:flex items-center bg-surface-container-low border border-outline-variant/40 rounded px-3 py-1.5 w-72 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
+<span class="material-symbols-outlined text-outline text-sm mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none p-0 text-body-sm text-on-surface focus:outline-none placeholder:text-outline/70 w-full" placeholder="Search corridors, candidate IDs..." type="text"/>
+<span class="text-label-telemetry font-label-telemetry text-outline text-xs">⌘K</span>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden xl:flex items-center gap-6 ml-4">
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface transition-colors pb-1 text-body-sm" href="#">Corridors</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface transition-colors pb-1 text-body-sm" href="#">Telemetry</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface transition-colors pb-1 text-body-sm" href="#">Incidents</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface transition-colors pb-1 text-body-sm" href="#">Signal Control</a>
+<a class="border-b-2 border-primary text-primary dark:text-primary font-semibold pb-1 text-body-sm" href="#">Analytics</a>
+</nav>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-3">
+<div class="hidden sm:flex items-center gap-2">
+<button class="px-3 py-1.5 rounded border border-outline-variant/50 text-body-sm text-on-surface bg-surface-container-high/40 hover:bg-surface-container-high transition-all flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" data-icon="near_me">near_me</span>
+          Dispatch Unit
+        </button>
+<button class="px-3 py-1.5 rounded border border-error/40 text-body-sm text-error bg-error-container/20 hover:bg-error-container/30 transition-all flex items-center gap-1.5 font-medium">
+<span class="material-symbols-outlined text-sm" data-icon="warning">warning</span>
+          Emergency Override
+        </button>
+</div>
+<div class="h-6 w-px bg-outline-variant/40 mx-1"></div>
+<!-- Icon Actions -->
+<div class="flex items-center gap-1">
+<button class="p-1.5 rounded text-outline hover:text-on-surface hover:bg-surface-container transition-all relative">
+<span class="material-symbols-outlined text-lg" data-icon="notifications">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+</button>
+<button class="p-1.5 rounded text-outline hover:text-on-surface hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="tune">tune</span>
+</button>
+<div class="flex items-center gap-2 ml-2 pl-2 border-l border-outline-variant/30">
+<div class="w-8 h-8 rounded bg-surface-container-highest border border-outline-variant/60 flex items-center justify-center text-primary font-bold text-xs">
+            GH
+          </div>
+</div>
+</div>
+</div>
+</header>
+<!-- ==================== SIDE NAV RAIL (SHARED COMPONENT) ==================== -->
+<aside class="fixed left-0 top-0 h-full w-64 flex flex-col justify-between border-r border-outline-variant/30 bg-surface-container-lowest/90 backdrop-blur-lg z-40 pt-16">
+<div>
+<!-- Sector Identifier Header -->
+<div class="p-4 border-b border-outline-variant/30">
+<div class="flex items-center justify-between">
+<span class="text-label-code font-label-code font-bold tracking-wider text-primary">SECTOR 04 COMMAND</span>
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+</div>
+<div class="text-label-telemetry font-label-telemetry text-outline mt-1 flex items-center gap-1">
+<span>STATUS: OPTIMAL // 12ms</span>
+</div>
+</div>
+<!-- Tactical Tabs -->
+<nav class="mt-3 space-y-0.5">
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 px-4 py-3 flex items-center gap-3 transition-colors text-body-sm" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="hub">hub</span>
+<span>Network Overview</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 px-4 py-3 flex items-center gap-3 transition-colors text-body-sm" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="traffic">traffic</span>
+<span>Corridor Ops</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 px-4 py-3 flex items-center gap-3 transition-colors text-body-sm" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="traffic_jam">traffic_jam</span>
+<span>Signal Matrix</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 px-4 py-3 flex items-center gap-3 transition-colors text-body-sm" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="local_police">local_police</span>
+<span>Fleet Dispatch</span>
+</a>
+<!-- DPR Reporting - Semantic Active for Capital Planning -->
+<a class="bg-surface-container-high text-primary border-l-2 border-primary font-medium px-4 py-3 flex items-center gap-3 transition-colors text-body-sm" href="#">
+<span class="material-symbols-outlined text-lg text-primary" data-icon="description">description</span>
+<span>DPR Reporting</span>
+<span class="ml-auto text-label-badge font-label-badge bg-primary/20 text-primary px-1.5 py-0.5 rounded">PLAN</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 px-4 py-3 flex items-center gap-3 transition-colors text-body-sm" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="settings">settings</span>
+<span>System Audit</span>
+</a>
+</nav>
+</div>
+<!-- Rail Footer -->
+<div class="p-4 border-t border-outline-variant/30 space-y-3">
+<button class="w-full py-2 px-3 bg-surface-container-high/60 hover:bg-surface-container-highest border border-primary/40 text-primary text-label-code font-label-code rounded flex items-center justify-center gap-2 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="flash_on">flash_on</span>
+        Signal Override
+      </button>
+<div class="flex justify-between items-center text-on-surface-variant pt-2">
+<a class="flex items-center gap-1 text-label-telemetry font-label-telemetry hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xs" data-icon="monitor_heart">monitor_heart</span>
+          Diagnostics
+        </a>
+<a class="flex items-center gap-1 text-label-telemetry font-label-telemetry hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xs" data-icon="terminal">terminal</span>
+          Terminal
+        </a>
+</div>
+</div>
+</aside>
+<!-- ==================== MAIN CONTENT CANVAS ==================== -->
+<main class="ml-64 pt-16 flex-1 flex flex-col p-6 space-y-5">
+<!-- Header & Subheader Breadcrumbs -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-2 border-b border-outline-variant/30">
+<div>
+<div class="flex items-center gap-2 text-label-telemetry font-label-telemetry text-outline mb-1">
+<span>CIVIC CAPITAL INFRASTRUCTURE</span>
+<span>/</span>
+<span>HYDERABAD WEST ZONE</span>
+<span>/</span>
+<span class="text-primary">DIR. PLAN 2025-Q3</span>
+</div>
+<h1 class="text-headline-lg font-headline-lg tracking-tight text-on-surface flex items-center gap-3">
+          Strategic Road Infrastructure &amp; Bottleneck Resolution Planner
+          <span class="text-label-badge font-label-badge bg-primary/15 text-primary border border-primary/30 px-2 py-0.5 rounded-full uppercase">GHMC Certified</span>
+</h1>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-0.5">
+          Greater Hyderabad Municipal Corporation (GHMC) Infrastructure Planning Directorate // Q3 Capital Review
+        </p>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<div class="text-right">
+<div class="text-label-telemetry font-label-telemetry text-outline">ENGINEERING SPRINT</div>
+<div class="text-label-code font-label-code text-on-surface font-semibold">PHASE 4 // ACTIVE REVIEW</div>
+</div>
+<button class="p-2 bg-surface-container border border-outline-variant/40 rounded hover:border-primary text-on-surface transition-colors" title="Reload Corridor Matrix">
+<span class="material-symbols-outlined text-base block" data-icon="refresh">refresh</span>
+</button>
+</div>
+</div>
+<!-- Top Alert Banner: Chronic Recurring Bottlenecks -->
+<div class="bg-error-container/15 border-l-4 border-error border-y border-r border-outline-variant/30 p-3.5 rounded-r flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-error/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-error text-xl" data-icon="fmd_bad">fmd_bad</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-label-badge font-label-badge uppercase tracking-wider text-error bg-error/10 px-1.5 py-0.5 rounded border border-error/30 font-bold">Priority Notice</span>
+<span class="text-body-md font-body-md text-on-surface font-semibold">Chronic Recurring Bottlenecks Identified (Persisting across 14+ peak commuter days)</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-0.5">
+            Automated sensor clusters along Hitec City Main Road, Mindspace Link, and N015 Junction detected average peak queue lengths exceeding 450m during evening traffic hours.
+          </p>
+</div>
+</div>
+<div class="hidden sm:flex items-center gap-2 shrink-0">
+<span class="text-label-telemetry font-label-telemetry text-outline">GIS INCIDENT FEED: LIVE</span>
+<span class="w-2 h-2 rounded-full bg-error animate-ping"></span>
+</div>
+</div>
+<!-- Executive KPI Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+<!-- KPI 1 -->
+<div class="bg-surface-container-low/80 backdrop-blur border border-outline-variant/30 rounded p-4 relative overflow-hidden group hover:border-primary/50 transition-all">
+<div class="absolute -right-4 -bottom-4 text-surface-container-highest/30 select-none pointer-events-none">
+<span class="material-symbols-outlined text-7xl" data-icon="alt_route">alt_route</span>
+</div>
+<div class="text-label-telemetry font-label-telemetry text-outline mb-1 flex items-center justify-between">
+<span>PIPELINE LOAD</span>
+<span class="text-primary font-semibold">SYS.ID // 4098</span>
+</div>
+<div class="text-display-lg font-display-lg text-primary tracking-tight font-bold">5</div>
+<div class="text-headline-sm font-headline-sm text-on-surface mt-1">High-Priority Intervention Candidates</div>
+<div class="text-label-telemetry font-label-telemetry text-on-surface-variant mt-2 flex items-center gap-1">
+<span class="text-secondary flex items-center"><span class="material-symbols-outlined text-xs" data-icon="arrow_upward">arrow_upward</span>100%</span>
+<span>Engineered geometric designs verified</span>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-container-low/80 backdrop-blur border border-outline-variant/30 rounded p-4 relative overflow-hidden group hover:border-primary/50 transition-all">
+<div class="absolute -right-4 -bottom-4 text-surface-container-highest/30 select-none pointer-events-none">
+<span class="material-symbols-outlined text-7xl" data-icon="currency_rupee">currency_rupee</span>
+</div>
+<div class="text-label-telemetry font-label-telemetry text-outline mb-1 flex items-center justify-between">
+<span>CAPEX ESTIMATE</span>
+<span class="text-tertiary font-semibold">GHMC-2025</span>
+</div>
+<div class="text-display-lg font-display-lg text-tertiary tracking-tight font-bold">₹42.8 Cr</div>
+<div class="text-headline-sm font-headline-sm text-on-surface mt-1">Estimated Capital Requirement</div>
+<div class="text-label-telemetry font-label-telemetry text-on-surface-variant mt-2 flex items-center gap-1">
+<span>Allocated under Municipal Road Dev Fund (MRD)</span>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface-container-low/80 backdrop-blur border border-outline-variant/30 rounded p-4 relative overflow-hidden group hover:border-primary/50 transition-all">
+<div class="absolute -right-4 -bottom-4 text-surface-container-highest/30 select-none pointer-events-none">
+<span class="material-symbols-outlined text-7xl" data-icon="speed">speed</span>
+</div>
+<div class="text-label-telemetry font-label-telemetry text-outline mb-1 flex items-center justify-between">
+<span>THROUGHPUT RELIEF</span>
+<span class="text-secondary font-semibold">NET ACCEL</span>
+</div>
+<div class="text-display-lg font-display-lg text-secondary tracking-tight font-bold">12,400</div>
+<div class="text-headline-sm font-headline-sm text-on-surface mt-1">Delay Hours Saved / Month Across All Sectors</div>
+<div class="text-label-telemetry font-label-telemetry text-on-surface-variant mt-2 flex items-center gap-1">
+<span class="text-secondary font-semibold">+34.8%</span>
+<span>corridor velocity improvement</span>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-surface-container-low/80 backdrop-blur border border-outline-variant/30 rounded p-4 relative overflow-hidden group hover:border-primary/50 transition-all">
+<div class="absolute -right-4 -bottom-4 text-surface-container-highest/30 select-none pointer-events-none">
+<span class="material-symbols-outlined text-7xl" data-icon="hourglass_bottom">hourglass_bottom</span>
+</div>
+<div class="text-label-telemetry font-label-telemetry text-outline mb-1 flex items-center justify-between">
+<span>AMORTIZATION EFFICIENCY</span>
+<span class="text-primary font-semibold">AI SIMULATED</span>
+</div>
+<div class="text-display-lg font-display-lg text-primary tracking-tight font-bold">8.4 Mo</div>
+<div class="text-headline-sm font-headline-sm text-on-surface mt-1">Estimated Payback Period</div>
+<div class="text-label-telemetry font-label-telemetry text-on-surface-variant mt-2 flex items-center gap-1">
+<span>Calculated via fuel savings &amp; vehicle idle reduction</span>
+</div>
+</div>
+</div>
+<!-- ==================== MAIN WORKSPACE: TABLE & SIMULATION SPLIT ==================== -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 items-start">
+<!-- LEFT 7 COLS: DATA TABLE -->
+<div class="lg:col-span-7 bg-surface-container-low/80 backdrop-blur border border-outline-variant/30 rounded flex flex-col overflow-hidden shadow-lg">
+<!-- Table Control Toolbar -->
+<div class="p-4 border-b border-outline-variant/30 flex flex-wrap items-center justify-between gap-3 bg-surface-container/50">
+<div class="flex items-center gap-3">
+<span class="text-label-code font-label-code font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-base" data-icon="table_chart">table_chart</span>
+              PLANNING CANDIDATES (planning_candidates.csv)
+            </span>
+<span class="text-label-telemetry font-label-telemetry px-2 py-0.5 rounded bg-surface-container-highest text-outline">5 ITEMS</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="relative">
+<input class="bg-surface-container-lowest border border-outline-variant/40 rounded px-2.5 py-1 text-body-sm text-on-surface focus:outline-none focus:border-primary w-40" placeholder="Filter candidates..." type="text"/>
+</div>
+<button class="p-1 rounded bg-surface-container-highest/60 hover:bg-surface-container-highest text-outline hover:text-on-surface border border-outline-variant/30" title="Sort Table">
+<span class="material-symbols-outlined text-sm block" data-icon="sort">sort</span>
+</button>
+</div>
+</div>
+<!-- Scrollable Table -->
+<div class="overflow-x-auto custom-scrollbar">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest/80 text-label-telemetry font-label-telemetry text-outline border-b border-outline-variant/40 uppercase">
+<th class="py-3 px-3.5">Candidate ID</th>
+<th class="py-3 px-3.5">Target Corridor</th>
+<th class="py-3 px-3.5">Intervention Type</th>
+<th class="py-3 px-3.5 min-w-[170px]">Cost Index</th>
+<th class="py-3 px-3.5">AI-Estimated ROI</th>
+<th class="py-3 px-3.5">Feasibility</th>
+<th class="py-3 px-3.5 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20 text-body-sm font-body-sm">
+<!-- Candidate 104 (Active Focus) -->
+<tr class="bg-surface-container/60 hover:bg-surface-container-high/50 transition-colors border-l-2 border-primary">
+<td class="py-3 px-3.5">
+<div class="text-label-code font-label-code font-bold text-primary">CAN-104</div>
+<span class="text-label-badge font-label-badge text-outline">SEC-04-A</span>
+</td>
+<td class="py-3 px-3.5">
+<div class="font-medium text-on-surface">R0377 Arterial</div>
+<div class="text-label-telemetry font-label-telemetry text-outline">(Hitec City Main Rd)</div>
+</td>
+<td class="py-3 px-3.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-label-badge font-label-badge bg-primary-container/20 text-primary border border-primary/40 font-medium">
+                    Lane Addition / Road Widening
+                  </span>
+</td>
+<td class="py-3 px-3.5">
+<div class="flex items-center justify-between text-label-telemetry font-label-telemetry mb-1">
+<span class="text-on-surface font-semibold">14/20</span>
+<span class="text-outline">₹18.5 Cr</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full rounded-full" style="width: 70%"></div>
+</div>
+</td>
+<td class="py-3 px-3.5">
+<div class="text-label-code font-label-code text-secondary font-bold">630 hrs</div>
+<div class="text-label-telemetry font-label-telemetry text-outline">Delay Saved / Mo</div>
+</td>
+<td class="py-3 px-3.5">
+<span class="inline-flex items-center gap-1 text-label-code font-label-code text-secondary font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                    94% High
+                  </span>
+</td>
+<td class="py-3 px-3.5 text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5">
+<button class="px-2 py-1 rounded bg-primary text-on-primary text-label-badge font-label-badge font-bold flex items-center gap-1 hover:brightness-110 shadow-sm" onclick="this.classList.toggle('ring-2')">
+<span class="material-symbols-outlined text-xs" data-icon="play_arrow">play_arrow</span>
+                      Simulate
+                    </button>
+<button class="px-2 py-1 rounded border border-outline-variant/40 bg-surface-container-high/60 text-outline hover:text-on-surface hover:border-primary text-label-badge font-label-badge transition-colors">
+                      Select
+                    </button>
+</div>
+</td>
+</tr>
+<!-- Candidate 108 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3 px-3.5">
+<div class="text-label-code font-label-code font-bold text-on-surface">CAN-108</div>
+<span class="text-label-badge font-label-badge text-outline">SEC-04-C</span>
+</td>
+<td class="py-3 px-3.5">
+<div class="font-medium text-on-surface">R0067 Corridor</div>
+<div class="text-label-telemetry font-label-telemetry text-outline">(N015 Junction)</div>
+</td>
+<td class="py-3 px-3.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-label-badge font-label-badge bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 font-medium">
+                    Flyover Connector
+                  </span>
+</td>
+<td class="py-3 px-3.5">
+<div class="flex items-center justify-between text-label-telemetry font-label-telemetry mb-1">
+<span class="text-on-surface font-semibold">18/20</span>
+<span class="text-outline">₹24.0 Cr</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-error h-full rounded-full" style="width: 90%"></div>
+</div>
+</td>
+<td class="py-3 px-3.5">
+<div class="text-label-code font-label-code text-secondary font-bold">1,420 hrs</div>
+<div class="text-label-telemetry font-label-telemetry text-outline">Delay Saved / Mo</div>
+</td>
+<td class="py-3 px-3.5">
+<span class="inline-flex items-center gap-1 text-label-code font-label-code text-secondary font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                    88% High
+                  </span>
+</td>
+<td class="py-3 px-3.5 text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5">
+<button class="px-2 py-1 rounded bg-surface-container border border-outline-variant/40 text-on-surface text-label-badge font-label-badge hover:border-primary flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-xs" data-icon="play_arrow">play_arrow</span>
+                      Simulate
+                    </button>
+<button class="px-2 py-1 rounded border border-outline-variant/40 bg-surface-container-high/60 text-outline hover:text-on-surface hover:border-primary text-label-badge font-label-badge transition-colors">
+                      Select
+                    </button>
+</div>
+</td>
+</tr>
+<!-- Candidate 112 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3 px-3.5">
+<div class="text-label-code font-label-code font-bold text-on-surface">CAN-112</div>
+<span class="text-label-badge font-label-badge text-outline">SEC-04-B</span>
+</td>
+<td class="py-3 px-3.5">
+<div class="font-medium text-on-surface">R0142 Mindspace</div>
+<div class="text-label-telemetry font-label-telemetry text-outline">Underpass Link</div>
+</td>
+<td class="py-3 px-3.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-label-badge font-label-badge bg-secondary-container/20 text-secondary-fixed-dim border border-secondary/30 font-medium">
+                    Turn Lane Extension &amp; U-Turn Geometry
+                  </span>
+</td>
+<td class="py-3 px-3.5">
+<div class="flex items-center justify-between text-label-telemetry font-label-telemetry mb-1">
+<span class="text-on-surface font-semibold">6/20</span>
+<span class="text-outline">₹4.2 Cr</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 30%"></div>
+</div>
+</td>
+<td class="py-3 px-3.5">
+<div class="text-label-code font-label-code text-secondary font-bold">890 hrs</div>
+<div class="text-label-telemetry font-label-telemetry text-outline">Delay Saved / Mo</div>
+</td>
+<td class="py-3 px-3.5">
+<span class="inline-flex items-center gap-1 text-label-code font-label-code text-tertiary font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+                    76% Med
+                  </span>
+</td>
+<td class="py-3 px-3.5 text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5">
+<button class="px-2 py-1 rounded bg-surface-container border border-outline-variant/40 text-on-surface text-label-badge font-label-badge hover:border-primary flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-xs" data-icon="play_arrow">play_arrow</span>
+                      Simulate
+                    </button>
+<button class="px-2 py-1 rounded border border-outline-variant/40 bg-surface-container-high/60 text-outline hover:text-on-surface hover:border-primary text-label-badge font-label-badge transition-colors">
+                      Select
+                    </button>
+</div>
+</td>
+</tr>
+<!-- Candidate 119 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3 px-3.5">
+<div class="text-label-code font-label-code font-bold text-on-surface">CAN-119</div>
+<span class="text-label-badge font-label-badge text-outline">SEC-04-D</span>
+</td>
+<td class="py-3 px-3.5">
+<div class="font-medium text-on-surface">R0210 Financial Dist</div>
+<div class="text-label-telemetry font-label-telemetry text-outline">Bypass Loop</div>
+</td>
+<td class="py-3 px-3.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-label-badge font-label-badge bg-tertiary-container/20 text-tertiary border border-tertiary/30 font-medium">
+                    Grade-Separated Rotary
+                  </span>
+</td>
+<td class="py-3 px-3.5">
+<div class="flex items-center justify-between text-label-telemetry font-label-telemetry mb-1">
+<span class="text-on-surface font-semibold">12/20</span>
+<span class="text-outline">₹12.1 Cr</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full rounded-full" style="width: 60%"></div>
+</div>
+</td>
+<td class="py-3 px-3.5">
+<div class="text-label-code font-label-code text-secondary font-bold">510 hrs</div>
+<div class="text-label-telemetry font-label-telemetry text-outline">Delay Saved / Mo</div>
+</td>
+<td class="py-3 px-3.5">
+<span class="inline-flex items-center gap-1 text-label-code font-label-code text-secondary font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                    91% High
+                  </span>
+</td>
+<td class="py-3 px-3.5 text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5">
+<button class="px-2 py-1 rounded bg-surface-container border border-outline-variant/40 text-on-surface text-label-badge font-label-badge hover:border-primary flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-xs" data-icon="play_arrow">play_arrow</span>
+                      Simulate
+                    </button>
+<button class="px-2 py-1 rounded border border-outline-variant/40 bg-surface-container-high/60 text-outline hover:text-on-surface hover:border-primary text-label-badge font-label-badge transition-colors">
+                      Select
+                    </button>
+</div>
+</td>
+</tr>
+<!-- Candidate 125 -->
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="py-3 px-3.5">
+<div class="text-label-code font-label-code font-bold text-on-surface">CAN-125</div>
+<span class="text-label-badge font-label-badge text-outline">SEC-04-E</span>
+</td>
+<td class="py-3 px-3.5">
+<div class="font-medium text-on-surface">R0089 Kondapur</div>
+<div class="text-label-telemetry font-label-telemetry text-outline">Meridian Node</div>
+</td>
+<td class="py-3 px-3.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-label-badge font-label-badge bg-primary-container/20 text-primary border border-primary/40 font-medium">
+                    Lane Addition / Road Widening
+                  </span>
+</td>
+<td class="py-3 px-3.5">
+<div class="flex items-center justify-between text-label-telemetry font-label-telemetry mb-1">
+<span class="text-on-surface font-semibold">8/20</span>
+<span class="text-outline">₹7.4 Cr</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 40%"></div>
+</div>
+</td>
+<td class="py-3 px-3.5">
+<div class="text-label-code font-label-code text-secondary font-bold">420 hrs</div>
+<div class="text-label-telemetry font-label-telemetry text-outline">Delay Saved / Mo</div>
+</td>
+<td class="py-3 px-3.5">
+<span class="inline-flex items-center gap-1 text-label-code font-label-code text-secondary font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                    85% High
+                  </span>
+</td>
+<td class="py-3 px-3.5 text-right whitespace-nowrap">
+<div class="inline-flex items-center gap-1.5">
+<button class="px-2 py-1 rounded bg-surface-container border border-outline-variant/40 text-on-surface text-label-badge font-label-badge hover:border-primary flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-xs" data-icon="play_arrow">play_arrow</span>
+                      Simulate
+                    </button>
+<button class="px-2 py-1 rounded border border-outline-variant/40 bg-surface-container-high/60 text-outline hover:text-on-surface hover:border-primary text-label-badge font-label-badge transition-colors">
+                      Select
+                    </button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer Metadata -->
+<div class="p-3 bg-surface-container/30 border-t border-outline-variant/20 flex flex-wrap items-center justify-between text-label-telemetry font-label-telemetry text-outline">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="database">database</span>
+<span>MODEL: HYD-METRO-FLOW-V3.4 // CONFIDENCE INDEX: 97.2%</span>
+</div>
+<div class="flex items-center gap-3">
+<span>SELECTED CANDIDATE: <strong class="text-primary">CAN-104 (HITEC ARTERIAL)</strong></span>
+</div>
+</div>
+</div>
+<!-- RIGHT 5 COLS: BEFORE VS AFTER SIMULATION & DPR ACTIONS -->
+<div class="lg:col-span-5 space-y-4">
+<!-- Simulation HUD Card -->
+<div class="bg-surface-container-low/90 backdrop-blur border border-outline-variant/40 rounded p-5 shadow-xl relative overflow-hidden">
+<!-- Card Header -->
+<div class="flex items-center justify-between pb-3 border-b border-outline-variant/30">
+<div>
+<div class="text-label-telemetry font-label-telemetry text-primary font-bold tracking-wider">CORRIDOR TWIN // CAN-104</div>
+<h2 class="text-headline-sm font-headline-sm text-on-surface font-semibold">Simulated Cross-Section Dynamic</h2>
+</div>
+<span class="text-label-badge font-label-badge bg-secondary/15 text-secondary border border-secondary/30 px-2 py-0.5 rounded font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+              ACTIVE PROJECTION
+            </span>
+</div>
+<!-- Cross-Section Schematic Diagrams -->
+<div class="space-y-4 mt-4">
+<!-- BEFORE STATE (EXISTING) -->
+<div class="bg-surface-container-lowest/80 border border-error/30 rounded p-3.5 relative">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded bg-error"></span>
+<span class="text-label-code font-label-code text-error font-bold uppercase">Before (Existing)</span>
+</div>
+<span class="text-label-telemetry font-label-telemetry text-error">CONGESTION 85%</span>
+</div>
+<div class="text-body-sm font-medium text-on-surface mb-2">
+                Current 2-lane bottleneck (Congestion 85%)
+              </div>
+<!-- Schematic Lane Representation -->
+<div class="grid grid-cols-2 gap-1.5 bg-surface-container-highest/40 p-2 rounded border border-outline-variant/30">
+<div class="bg-error/20 border border-error/40 h-8 rounded flex items-center justify-center text-label-badge font-label-badge text-error">
+                  LANE 1 (LOCKED)
+                </div>
+<div class="bg-error/20 border border-error/40 h-8 rounded flex items-center justify-center text-label-badge font-label-badge text-error">
+                  LANE 2 (SLOW)
+                </div>
+</div>
+<!-- Telemetry Metrics Bar -->
+<div class="mt-3 flex items-center justify-between text-label-telemetry font-label-telemetry text-outline border-t border-outline-variant/20 pt-2">
+<div>AVG SPEED: <span class="text-error font-bold">14 km/h</span></div>
+<div>DAILY QUEUE: <span class="text-error font-bold">480 m</span></div>
+<div>LEVEL OF SVC: <span class="text-error font-bold">LOS 'F'</span></div>
+</div>
+</div>
+<!-- AFTER STATE (SIMULATED) -->
+<div class="bg-surface-container-lowest/80 border border-secondary/40 rounded p-3.5 relative shadow-inner">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded bg-secondary"></span>
+<span class="text-label-code font-label-code text-secondary font-bold uppercase">After (Simulated)</span>
+</div>
+<span class="text-label-telemetry font-label-telemetry text-secondary">CONGESTION DROPS TO 22%</span>
+</div>
+<div class="text-body-sm font-medium text-on-surface mb-2">
+                Proposed 3-lane expansion (Congestion drops to 22%)
+              </div>
+<!-- Schematic Lane Representation -->
+<div class="grid grid-cols-3 gap-1.5 bg-surface-container-highest/40 p-2 rounded border border-outline-variant/30">
+<div class="bg-secondary/20 border border-secondary/40 h-8 rounded flex items-center justify-center text-label-badge font-label-badge text-secondary">
+                  LANE 1 (FLOW)
+                </div>
+<div class="bg-secondary/20 border border-secondary/40 h-8 rounded flex items-center justify-center text-label-badge font-label-badge text-secondary">
+                  LANE 2 (FLOW)
+                </div>
+<div class="bg-primary/20 border border-primary/40 h-8 rounded flex items-center justify-center text-label-badge font-label-badge text-primary font-bold">
+                  +LANE 3 (EXP)
+                </div>
+</div>
+<!-- Telemetry Metrics Bar -->
+<div class="mt-3 flex items-center justify-between text-label-telemetry font-label-telemetry text-outline border-t border-outline-variant/20 pt-2">
+<div>AVG SPEED: <span class="text-secondary font-bold">42 km/h</span></div>
+<div>THROUGHPUT: <span class="text-secondary font-bold">+65%</span></div>
+<div>LEVEL OF SVC: <span class="text-secondary font-bold">LOS 'B'</span></div>
+</div>
+</div>
+</div>
+<!-- Simulation Live Parameters -->
+<div class="mt-4 p-3 bg-surface-container rounded border border-outline-variant/30 grid grid-cols-2 gap-3">
+<div>
+<div class="text-label-telemetry font-label-telemetry text-outline">PEAK FLOW PARAMETER</div>
+<div class="text-label-code font-label-code text-on-surface font-bold text-base mt-0.5">4,200 PCU/hr</div>
+</div>
+<div>
+<div class="text-label-telemetry font-label-telemetry text-outline">SIGNAL DELAY REDUCTION</div>
+<div class="text-label-code font-label-code text-secondary font-bold text-base mt-0.5">-68% Critical Drop</div>
+</div>
+</div>
+<!-- Action Footer Buttons -->
+<div class="mt-5 space-y-2.5 pt-2 border-t border-outline-variant/30">
+<!-- Download DPR -->
+<button class="w-full py-2.5 px-4 rounded bg-primary hover:bg-primary-fixed-dim text-on-primary font-semibold text-body-sm flex items-center justify-center gap-2 shadow-lg transition-all active:scale-[0.99]">
+<span class="material-symbols-outlined text-lg" data-icon="picture_as_pdf">picture_as_pdf</span>
+<span>Download Detailed Project Report (DPR)</span>
+</button>
+<!-- Export Feasibility Assessment -->
+<button class="w-full py-2 px-4 rounded border border-outline-variant/50 hover:border-primary/80 bg-surface-container hover:bg-surface-container-high text-on-surface font-medium text-body-sm flex items-center justify-center gap-2 transition-all">
+<span class="material-symbols-outlined text-lg text-primary" data-icon="table_view">table_view</span>
+<span>Export Feasibility Assessment</span>
+</button>
+<!-- Submit to Municipal Committee (Glowing Accent CTA) -->
+<button class="w-full py-2.5 px-4 rounded border-2 border-secondary bg-secondary-container/20 hover:bg-secondary-container/30 text-secondary-fixed font-bold text-body-sm flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(78,222,163,0.3)] hover:shadow-[0_0_20px_rgba(78,222,163,0.5)] transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="send">send</span>
+<span>Submit to Municipal Standing Committee</span>
+</button>
+</div>
+</div>
+<!-- Municipal Compliance Box -->
+<div class="bg-surface-container-lowest/60 border border-outline-variant/20 rounded p-3 flex items-center gap-3 text-label-telemetry font-label-telemetry text-outline">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="verified_user">verified_user</span>
+<div>
+            IRC (Indian Roads Congress) Guidelines 86-2018 &amp; MoRTH Section 100 Compliant Geometric Validation.
+          </div>
+</div>
+</div>
+</div>
+<!-- Quick Telemetry HUD Tickers -->
+<div class="mt-auto pt-3 border-t border-outline-variant/30 flex flex-wrap items-center justify-between text-label-telemetry font-label-telemetry text-outline">
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+          ACTIVE SIMULATOR CORE: HYD-WEST-09
+        </span>
+<span class="text-outline-variant">|</span>
+<span>LATENCY: 12ms</span>
+<span class="text-outline-variant">|</span>
+<span>WEATHER INGEST: 28°C DRY CONDITIONS</span>
+</div>
+<div class="text-primary font-mono font-semibold">
+        CITYFLOW AI // GHMC PLANNING SUITE v4.8.2
+      </div>
+</div>
+</main>
+</body></html>

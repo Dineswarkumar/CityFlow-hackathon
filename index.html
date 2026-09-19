@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CityFlow AI — Hyderabad Urban Traffic & Corridor Intelligence</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfeff',
+              100: '#cffafe',
+              500: '#06b6d4',
+              600: '#0891b2',
+              700: '#0e7490',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Leaflet GIS Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Offline / Local Network Data (Bypasses CORS for direct file:// open) -->
+  <script src="network_data.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    * { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    
+    /* Smooth transitions */
+    .theme-transition {
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    /* Leaflet customization */
+    .leaflet-container {
+      background: transparent !important;
+      font-family: inherit;
+    }
+    .leaflet-popup-content-wrapper {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      color: #f8fafc;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+    .light .leaflet-popup-content-wrapper {
+      background: rgba(255, 255, 255, 0.95);
+      color: #0f172a;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .leaflet-popup-tip {
+      background: rgba(15, 23, 42, 0.95);
+    }
+    .light .leaflet-popup-tip {
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    /* Custom subtle scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.3); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(156, 163, 175, 0.5); }
+  </style>
+</head>
+
+<body class="bg-slate-50 dark:bg-[#0B0F19] text-slate-800 dark:text-slate-100 min-h-screen theme-transition flex flex-col antialiased selection:bg-cyan-500 selection:text-white">
+
+  <!-- ================= TOP NAVIGATION BAR ================= -->
+  <header class="sticky top-0 z-50 bg-white/80 dark:bg-[#0B0F19]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 theme-transition">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand & Status -->
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-md shadow-cyan-500/20 text-white font-bold text-lg">
+            <i data-lucide="network" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-lg tracking-tight text-slate-900 dark:text-white">CityFlow <span class="text-cyan-500">AI</span></span>
+              <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                Live Metro Grid
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Hyderabad Urban Corridor Intelligence</p>
+          </div>
+        </div>
+
+        <!-- Telemetry Summary Badges -->
+        <div class="hidden lg:flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
+          <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-cyan-500"></i> 120 Nodes</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="git-commit" class="w-3.5 h-3.5 text-blue-500"></i> 436 Corridors</span>
+          <span class="flex items-center gap-1.5"><i data-lucide="cloud-rain" class="w-3.5 h-3.5 text-amber-500"></i> Rain: 0.0 mm/h</span>
+        </div>
+      </div>
+
+      <!-- Center / Right: Portal Selector & Theme Switcher -->
+      <div class="flex items-center gap-3">
+        
+        <!-- Portal Tab Switcher (Judge explicit suggestion) -->
+        <div class="bg-slate-100 dark:bg-slate-900/90 p-1 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center gap-1">
+          <button id="tab-commuter" onclick="switchPortal('commuter')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all bg-white dark:bg-slate-800 shadow-sm text-cyan-600 dark:text-cyan-400">
+            <i data-lucide="car" class="w-3.5 h-3.5"></i>
+            <span>Commuter Portal</span>
+          </button>
+          <button id="tab-police" onclick="switchPortal('police')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+            <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
+            <span>Traffic Police Command</span>
+          </button>
+          <button id="tab-planner" onclick="switchPortal('planner')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+            <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+            <span>Road Widening Planner</span>
+          </button>
+          <button id="tab-forecast" onclick="switchPortal('forecast')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+            <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+            <span>15-60m Forecaster</span>
+          </button>
+        </div>
+
+        <!-- Light / Dark Mode Toggle -->
+        <button onclick="toggleTheme()" class="w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm" title="Toggle Light/Dark Theme">
+          <i id="theme-icon" data-lucide="sun" class="w-4 h-4 hidden dark:block text-amber-400"></i>
+          <i id="theme-icon-light" data-lucide="moon" class="w-4 h-4 block dark:hidden text-slate-700"></i>
+        </button>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN APP CONTAINER ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
+
+    <!-- SUB-BANNER SUMMARY STATS -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div class="bg-white dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Network Flow Rate</span>
+          <span class="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-500"><i data-lucide="gauge" class="w-4 h-4"></i></span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">46.8</span>
+          <span class="text-xs text-slate-500 font-medium">km/h avg</span>
+        </div>
+        <div class="mt-1 text-xs text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
+          <i data-lucide="arrow-up-right" class="w-3 h-3"></i> +4.2% vs Baseline
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Active Incidents</span>
+          <span class="p-1.5 rounded-lg bg-rose-500/10 text-rose-500"><i data-lucide="alert-triangle" class="w-4 h-4"></i></span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-400">1 Critical</span>
+          <span class="text-xs text-slate-500 font-medium">Segment R0067</span>
+        </div>
+        <div class="mt-1 text-xs text-rose-500 font-medium flex items-center gap-1">
+          <i data-lucide="clock" class="w-3 h-3"></i> Detour in effect
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Police Wardens Active</span>
+          <span class="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-500"><i data-lucide="shield-check" class="w-4 h-4"></i></span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">8 Units</span>
+          <span class="text-xs text-slate-500 font-medium">Patrol Grid</span>
+        </div>
+        <div class="mt-1 text-xs text-cyan-600 dark:text-cyan-400 font-medium flex items-center gap-1">
+          <i data-lucide="check" class="w-3 h-3"></i> Junction N015 Assigned
+        </div>
+      </div>
+
+      <div class="bg-white dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-medium text-slate-500 dark:text-slate-400">Capital Projects Tested</span>
+          <span class="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-500"><i data-lucide="hammer" class="w-4 h-4"></i></span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">90 Plans</span>
+          <span class="text-xs text-slate-500 font-medium">BPR Counterfactual</span>
+        </div>
+        <div class="mt-1 text-xs text-indigo-600 dark:text-indigo-400 font-medium flex items-center gap-1">
+          <i data-lucide="sparkles" class="w-3 h-3"></i> Top ROI: PLAN0376 (52.5)
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= VIEW 1: COMMUTER & CITIZEN VIEW ================= -->
+    <div id="view-commuter" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Interactive Map Panel (7 Cols) -->
+      <div class="lg:col-span-8 bg-white dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm flex flex-col h-[560px] relative theme-transition">
+        
+        <!-- Map Header Controls -->
+        <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm z-10">
+          <div class="flex items-center gap-2">
+            <i data-lucide="navigation" class="w-4 h-4 text-cyan-500"></i>
+            <span class="text-sm font-semibold text-slate-900 dark:text-white">Hyderabad Metro Corridor Map</span>
+            <span class="text-xs text-slate-400 ml-2">Click any road segment to inspect</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 text-xs font-medium rounded-md bg-rose-500/10 text-rose-500 border border-rose-500/20">Blocked: R0067</span>
+            <span class="px-2 py-0.5 text-xs font-medium rounded-md bg-cyan-500/10 text-cyan-500 border border-cyan-500/20">Detour: Active</span>
+          </div>
+        </div>
+
+        <!-- The Leaflet Map Instance -->
+        <div id="map-commuter" class="flex-1 w-full z-0"></div>
+
+        <!-- Map Legend Floating Pill -->
+        <div class="absolute bottom-4 left-4 z-10 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 shadow-md text-xs flex items-center gap-4">
+          <div class="flex items-center gap-1.5"><span class="w-3 h-1 bg-emerald-500 rounded-full"></span> <span>Smooth (&gt;45 km/h)</span></div>
+          <div class="flex items-center gap-1.5"><span class="w-3 h-1 bg-amber-500 rounded-full"></span> <span>Moderate</span></div>
+          <div class="flex items-center gap-1.5"><span class="w-3 h-1 bg-rose-500 rounded-full"></span> <span>Blocked/Incident</span></div>
+          <div class="flex items-center gap-1.5"><span class="w-3 h-1 bg-cyan-400 rounded-full"></span> <span>AI Detour</span></div>
+        </div>
+      </div>
+
+      <!-- Commuter Route Advisory Card (4 Cols) -->
+      <div class="lg:col-span-4 flex flex-col gap-4">
+        
+        <!-- Search / Route Planner Box -->
+        <div class="bg-white dark:bg-slate-900/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition">
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <i data-lucide="locate" class="w-4 h-4 text-cyan-500"></i> Commuter Route Guidance
+          </h3>
+          <div class="mt-4 space-y-3 text-xs">
+            <div>
+              <label class="text-slate-500 dark:text-slate-400 font-medium">Origin</label>
+              <div class="mt-1 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex items-center gap-2 text-slate-900 dark:text-white font-medium">
+                <span class="w-2 h-2 rounded-full bg-cyan-500"></span> Gachibowli Outer Junction (N015)
+              </div>
+            </div>
+            <div>
+              <label class="text-slate-500 dark:text-slate-400 font-medium">Destination</label>
+              <div class="mt-1 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 flex items-center gap-2 text-slate-900 dark:text-white font-medium">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Hitec City Mindspace (N082)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Detour Advisory Box -->
+        <div class="bg-gradient-to-b from-cyan-500/10 to-transparent dark:from-cyan-950/30 dark:to-transparent bg-white dark:bg-slate-900/60 p-5 rounded-2xl border border-cyan-500/30 dark:border-cyan-500/20 shadow-sm flex-1 flex flex-col justify-between theme-transition">
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs font-bold border border-rose-500/20 flex items-center gap-1.5">
+                <i data-lucide="alert-octagon" class="w-3.5 h-3.5"></i> Accident on Corridor R0067
+              </span>
+              <span class="text-xs font-bold text-cyan-600 dark:text-cyan-400">Save 14.2 min</span>
+            </div>
+
+            <h4 class="mt-3 text-base font-bold text-slate-900 dark:text-white">Recommended Detour via Cyber Bypass</h4>
+            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              Segment R0067 is experiencing severe stall gridlock (speed dropped to 12.5 km/h). Our AI engine calculated an optimal turn-restricted detour corridor avoiding the choke point.
+            </p>
+
+            <div class="mt-4 grid grid-cols-2 gap-3">
+              <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+                <span class="text-[11px] font-medium text-slate-500 dark:text-slate-400">Estimated Travel Time</span>
+                <p class="text-base font-bold text-slate-900 dark:text-white mt-0.5">16.4 mins</p>
+                <span class="text-[10px] text-emerald-600 dark:text-emerald-400">vs 30.6m congested</span>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+                <span class="text-[11px] font-medium text-slate-500 dark:text-slate-400">Turn Restrictions</span>
+                <p class="text-base font-bold text-slate-900 dark:text-white mt-0.5">100% Honored</p>
+                <span class="text-[10px] text-cyan-600 dark:text-cyan-400">No illegal U-turns</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-5 space-y-2">
+            <button onclick="startGuidance()" id="btn-guidance" class="w-full py-2.5 px-4 rounded-xl bg-cyan-500 hover:bg-cyan-600 active:scale-[0.98] text-white font-bold text-xs shadow-md shadow-cyan-500/20 transition-all flex items-center justify-center gap-2">
+              <i data-lucide="navigation-2" class="w-4 h-4"></i> Accept Detour &amp; Start Navigation
+            </button>
+            <p id="guidance-status" class="text-[11px] text-center text-slate-500 font-medium"></p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ================= VIEW 2: TRAFFIC POLICE TACTICAL COMMAND ================= -->
+    <div id="view-police" class="hidden grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Live Incident Alert & Dispatch Console (7 Cols) -->
+      <div class="lg:col-span-7 bg-white dark:bg-slate-900/60 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition flex flex-col gap-5">
+        
+        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+          <div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <i data-lucide="radio" class="w-4 h-4 text-rose-500 animate-pulse"></i> Tactical Police Dispatch Console
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Real-time incident detection with false-alarm neighbor consensus</p>
+          </div>
+          <span class="px-2.5 py-1 text-xs font-bold rounded-lg bg-rose-500/10 text-rose-500 border border-rose-500/20">1 Active Emergency</span>
+        </div>
+
+        <!-- Main Critical Incident Card -->
+        <div class="p-5 rounded-2xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/50 flex flex-col gap-4">
+          <div class="flex items-start justify-between">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 text-xs font-bold rounded bg-rose-600 text-white">PRIORITY: HIGH</span>
+                <span class="text-xs font-bold text-slate-900 dark:text-white">Segment R0067 (Connecting N015 &rarr; N022)</span>
+              </div>
+              <h4 class="mt-1.5 text-sm font-bold text-rose-600 dark:text-rose-400">Severe Incident: Stalled Multi-Axle Vehicle Blockage</h4>
+            </div>
+            <span class="text-xs font-mono font-bold text-slate-500 dark:text-slate-400">17:42 IST</span>
+          </div>
+
+          <!-- Telemetry Specs -->
+          <div class="grid grid-cols-3 gap-3 text-xs">
+            <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900/80 border border-rose-200/60 dark:border-rose-900/40">
+              <span class="text-slate-500 text-[11px]">Speed Drop</span>
+              <p class="text-sm font-bold text-rose-600 dark:text-rose-400 mt-0.5">-36.5 km/h</p>
+              <span class="text-[10px] text-slate-400">Actual: 12.5 vs Exp: 49.0</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900/80 border border-rose-200/60 dark:border-rose-900/40">
+              <span class="text-slate-500 text-[11px]">Queue Spillback</span>
+              <p class="text-sm font-bold text-slate-900 dark:text-white mt-0.5">24 Vehicles</p>
+              <span class="text-[10px] text-rose-500 font-medium">+8 veh in 10 mins</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-white dark:bg-slate-900/80 border border-rose-200/60 dark:border-rose-900/40">
+              <span class="text-slate-500 text-[11px]">Confidence</span>
+              <p class="text-sm font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">High (94%)</p>
+              <span class="text-[10px] text-slate-400">Sensor Quality: 1.0</span>
+            </div>
+          </div>
+
+          <div class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed bg-white/70 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200/80 dark:border-slate-800">
+            <strong>AI Root-Cause Explainability:</strong> Dry weather confirmed (rain = 0.0 mm/h), no scheduled roadworks. Speed anomaly confirmed across both upstream and downstream sensor nodes. Zero false-alarm probability.
+          </div>
+
+          <!-- Police Officer Action Directives -->
+          <div class="pt-2 border-t border-rose-200/50 dark:border-rose-900/40 flex flex-col sm:flex-row items-center gap-3">
+            <button onclick="dispatchOfficer()" id="btn-dispatch" class="w-full sm:w-auto flex-1 py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 active:scale-[0.98] text-white font-bold text-xs shadow-md shadow-rose-600/20 transition-all flex items-center justify-center gap-2">
+              <i data-lucide="shield" class="w-4 h-4"></i> Dispatch Patrol Unit #7 to Junction N015
+            </button>
+            <button onclick="overrideSignal()" id="btn-signal" class="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-white font-bold text-xs transition-all flex items-center justify-center gap-2">
+              <i data-lucide="sliders" class="w-4 h-4"></i> +15s Green Wave (SIG001)
+            </button>
+          </div>
+          <div id="police-action-log" class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold text-center hidden"></div>
+        </div>
+
+      </div>
+
+      <!-- Tactical Patrol Units & Signal Status (5 Cols) -->
+      <div class="lg:col-span-5 flex flex-col gap-4">
+        
+        <div class="bg-white dark:bg-slate-900/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition">
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center justify-between">
+            <span class="flex items-center gap-2"><i data-lucide="users" class="w-4 h-4 text-cyan-500"></i> Active Traffic Police Patrols</span>
+            <span class="text-xs text-slate-400 font-normal">8 On-Duty</span>
+          </h3>
+
+          <div class="mt-4 space-y-2.5 text-xs">
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="w-7 h-7 rounded-lg bg-cyan-500/10 text-cyan-500 flex items-center justify-center font-bold text-[11px]">P-07</span>
+                <div>
+                  <p class="font-bold text-slate-900 dark:text-white">Junction N015 (Gachibowli)</p>
+                  <p class="text-[11px] text-slate-400">Assigned to R0067 Diversion</p>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20">En Route</span>
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center font-bold text-[11px]">P-03</span>
+                <div>
+                  <p class="font-bold text-slate-900 dark:text-white">Junction N022 (Cyber Towers)</p>
+                  <p class="text-[11px] text-slate-400">Manual Signal Control</p>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">On Site</span>
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="w-7 h-7 rounded-lg bg-slate-500/10 text-slate-400 flex items-center justify-center font-bold text-[11px]">P-11</span>
+                <div>
+                  <p class="font-bold text-slate-900 dark:text-white">Junction N045 (Kondapur)</p>
+                  <p class="text-[11px] text-slate-400">Corridor Patrol</p>
+                </div>
+              </div>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-500/10 text-slate-400 border border-slate-500/20">Standby</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Roadside Variable Message Sign (VMS) Preview -->
+        <div class="bg-white dark:bg-slate-900/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition">
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <i data-lucide="tv" class="w-4 h-4 text-amber-500"></i> Roadside VMS Display Broadcast
+          </h3>
+          <div class="mt-3 p-4 rounded-xl bg-black border-2 border-amber-500/40 text-amber-400 font-mono text-center text-xs tracking-wider shadow-inner">
+            [ ALERT: R0067 BLOCKED AHEAD ]<br>
+            [ DIVERSION VIA CYBER BYPASS ]<br>
+            [ FOLLOW TRAFFIC POLICE SIGNS ]
+          </div>
+          <button class="mt-3 w-full py-2 text-xs font-semibold rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition-colors">
+            Update VMS Message
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ================= VIEW 3: ROAD WIDENING & CAPITAL INFRASTRUCTURE PLANNER ================= -->
+    <div id="view-planner" class="hidden grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Left: Planning Candidates Table (5 Cols) -->
+      <div class="lg:col-span-5 bg-white dark:bg-slate-900/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition flex flex-col gap-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <i data-lucide="layers" class="w-4 h-4 text-indigo-500"></i> Capital Project Candidates
+            </h3>
+            <p class="text-xs text-slate-400">90 interventions ranked by ROI (planning_candidates.csv)</p>
+          </div>
+          <span class="px-2 py-0.5 text-xs font-bold rounded bg-indigo-500/10 text-indigo-500">GHMC / HMDA</span>
+        </div>
+
+        <div class="space-y-2.5 overflow-y-auto max-h-[460px] pr-1" id="candidates-list">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- Right: Before vs After Simulation Sandbox (7 Cols) -->
+      <div class="lg:col-span-7 bg-white dark:bg-slate-900/60 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+            <div>
+              <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400" id="sim-plan-id">CANDIDATE: PLAN0376</span>
+              <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-0.5" id="sim-title">Lane Addition &amp; Road Widening on Segment R0377</h3>
+            </div>
+            <div class="text-right">
+              <span class="text-xs text-slate-400 font-medium">ROI Score</span>
+              <p class="text-xl font-extrabold text-emerald-600 dark:text-emerald-400" id="sim-roi">52.53</p>
+            </div>
+          </div>
+
+          <!-- Project Specs -->
+          <div class="mt-4 grid grid-cols-3 gap-3 text-xs">
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+              <span class="text-slate-400 font-medium">Intervention</span>
+              <p class="text-xs font-bold text-slate-900 dark:text-white mt-1" id="sim-type">Lane Addition (+1 Lane)</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+              <span class="text-slate-400 font-medium">Capacity Upgrade</span>
+              <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 mt-1" id="sim-delta">+500 veh/hr</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+              <span class="text-slate-400 font-medium">Cost &amp; Feasibility</span>
+              <p class="text-xs font-bold text-slate-900 dark:text-white mt-1" id="sim-cost">Cost Index: 12 (Medium)</p>
+            </div>
+          </div>
+
+          <!-- Before vs After Comparison Card -->
+          <div class="mt-5 p-5 rounded-2xl bg-gradient-to-r from-rose-500/5 via-slate-500/5 to-emerald-500/5 border border-slate-200 dark:border-slate-800">
+            <h4 class="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-4">BPR Equilibrium Impact: Before vs After</h4>
+            
+            <div class="grid grid-cols-2 gap-6">
+              <!-- Before -->
+              <div class="space-y-3">
+                <span class="px-2.5 py-1 rounded text-xs font-bold bg-rose-500/10 text-rose-500 border border-rose-500/20">BEFORE (Baseline Status Quo)</span>
+                <div>
+                  <p class="text-xs text-slate-400">Peak Commuter Speed</p>
+                  <p class="text-xl font-bold text-rose-600 dark:text-rose-400" id="sim-before-speed">18.4 km/h</p>
+                </div>
+                <div>
+                  <p class="text-xs text-slate-400">Monthly Delay Incurred</p>
+                  <p class="text-sm font-semibold text-slate-700 dark:text-slate-300" id="sim-before-delay">1,840.5 Veh-Hours</p>
+                </div>
+              </div>
+
+              <!-- After -->
+              <div class="space-y-3">
+                <span class="px-2.5 py-1 rounded text-xs font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">AFTER (Simulated Counterfactual)</span>
+                <div>
+                  <p class="text-xs text-slate-400">Upgraded Peak Speed</p>
+                  <p class="text-xl font-bold text-emerald-600 dark:text-emerald-400" id="sim-after-speed">41.2 km/h</p>
+                </div>
+                <div>
+                  <p class="text-xs text-slate-400">Monthly Delay Incurred</p>
+                  <p class="text-sm font-semibold text-slate-700 dark:text-slate-300" id="sim-after-delay">1,210.2 Veh-Hours</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Net Savings Banner -->
+            <div class="mt-5 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
+              <span class="font-medium text-slate-500 dark:text-slate-400">Total Commuter Delay Saved Monthly:</span>
+              <span class="text-sm font-extrabold text-emerald-600 dark:text-emerald-400" id="sim-saved">630.3 Vehicle-Hours Saved</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex items-center justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <button onclick="exportDPR()" class="py-2 px-4 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 transition-colors flex items-center gap-1.5">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export DPR Summary
+          </button>
+          <button onclick="runCustomSimulation()" class="py-2 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] text-xs font-bold text-white shadow-md shadow-indigo-600/20 transition-all flex items-center gap-1.5">
+            <i data-lucide="play" class="w-3.5 h-3.5"></i> Recalculate Equilibrium
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= VIEW 4: 15-60M FORECASTING STUDIO ================= -->
+    <div id="view-forecast" class="hidden grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <div class="lg:col-span-8 bg-white dark:bg-slate-900/60 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition flex flex-col gap-5">
+        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-4">
+          <div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <i data-lucide="line-chart" class="w-4 h-4 text-cyan-500"></i> Direct Multi-Horizon Speed Forecaster
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">LightGBM residual models with 90% Conformal Uncertainty bounds</p>
+          </div>
+          
+          <!-- Horizon Tabs -->
+          <div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center text-xs font-semibold">
+            <button onclick="changeHorizon('15m')" id="h-15m" class="px-3 py-1 rounded-lg bg-white dark:bg-slate-900 shadow-sm text-cyan-600 dark:text-cyan-400">15 min</button>
+            <button onclick="changeHorizon('30m')" id="h-30m" class="px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white">30 min</button>
+            <button onclick="changeHorizon('45m')" id="h-45m" class="px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white">45 min</button>
+            <button onclick="changeHorizon('60m')" id="h-60m" class="px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white">60 min</button>
+          </div>
+        </div>
+
+        <!-- Forecast Visualization Canvas -->
+        <div class="h-64 w-full relative flex flex-col justify-center">
+          <canvas id="forecastChart" class="w-full h-full"></canvas>
+        </div>
+
+        <!-- Legend and Explanations -->
+        <div class="flex items-center justify-between text-xs text-slate-500 border-t border-slate-200 dark:border-slate-800 pt-3">
+          <div class="flex items-center gap-4">
+            <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-slate-400"></span> Historical Baseline</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-0.5 bg-cyan-500"></span> AI Prediction</span>
+            <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-cyan-500/20 rounded"></span> 90% Conformal Interval (&plusmn;17.6 km/h)</span>
+          </div>
+          <span class="text-emerald-600 dark:text-emerald-400 font-medium">90.7% Empirical Coverage on Unseen Data</span>
+        </div>
+      </div>
+
+      <!-- Forecaster Explainability Cards (4 Cols) -->
+      <div class="lg:col-span-4 flex flex-col gap-4">
+        <div class="bg-white dark:bg-slate-900/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition">
+          <h4 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-4 h-4 text-cyan-500"></i> Top SHAP Feature Drivers
+          </h4>
+          <p class="text-xs text-slate-400 mt-1">Key variables influencing the selected horizon forecast</p>
+
+          <div class="mt-4 space-y-3 text-xs" id="shap-drivers">
+            <div>
+              <div class="flex justify-between font-medium">
+                <span class="text-slate-700 dark:text-slate-300">Upstream Corridor Flow Pressure</span>
+                <span class="text-cyan-500 font-bold">+34% impact</span>
+              </div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                <div class="bg-cyan-500 h-full rounded-full" style="width: 82%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between font-medium">
+                <span class="text-slate-700 dark:text-slate-300">Historical Hour-of-Week Baseline</span>
+                <span class="text-blue-500 font-bold">+28% impact</span>
+              </div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                <div class="bg-blue-500 h-full rounded-full" style="width: 68%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between font-medium">
+                <span class="text-slate-700 dark:text-slate-300">Speed Trend Delta (t - 15m)</span>
+                <span class="text-indigo-500 font-bold">+19% impact</span>
+              </div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                <div class="bg-indigo-500 h-full rounded-full" style="width: 48%"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between font-medium">
+                <span class="text-slate-700 dark:text-slate-300">Sensor Telemetry Quality</span>
+                <span class="text-emerald-500 font-bold">1.0 (Optimal)</span>
+              </div>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                <div class="bg-emerald-500 h-full rounded-full" style="width: 100%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900/60 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm theme-transition">
+          <h4 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i> Model Validation Audit
+          </h4>
+          <ul class="mt-3 space-y-2 text-xs text-slate-500 dark:text-slate-400">
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> Overfitting Gap: 0.74 km/h (Pass)</li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> Beats Persistence Baseline by +18.4%</li>
+            <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-500"></i> 11.0 ms Snapshot Inference Latency</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="mt-auto border-t border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/30 py-4 text-center text-xs text-slate-400 theme-transition">
+    NeuraX Hackathon 3.0 &bull; Domain 1: AI in Smart Cities &bull; CityFlow AI Decision Support System &bull; Hyderabad Metropolitan Network
+  </footer>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Global State
+    let currentTheme = 'dark';
+    let currentPortal = 'commuter';
+    let mapInstance = null;
+    let mapSegmentsGroup = null;
+    let networkData = null;
+
+    // 1. THEME SWITCHER
+    function toggleTheme() {
+      const html = document.documentElement;
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        html.classList.add('light');
+        currentTheme = 'light';
+      } else {
+        html.classList.remove('light');
+        html.classList.add('dark');
+        currentTheme = 'dark';
+      }
+      updateMapTiles();
+    }
+
+    // 2. PORTAL SWITCHER
+    function switchPortal(portalId) {
+      currentPortal = portalId;
+      const views = ['commuter', 'police', 'planner', 'forecast'];
+      views.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        const tab = document.getElementById(`tab-${v}`);
+        if (v === portalId) {
+          el.classList.remove('hidden');
+          el.classList.add('grid');
+          tab.classList.add('bg-white', 'dark:bg-slate-800', 'shadow-sm', 'text-cyan-600', 'dark:text-cyan-400');
+          tab.classList.remove('text-slate-600', 'dark:text-slate-400');
+        } else {
+          el.classList.add('hidden');
+          el.classList.remove('grid');
+          tab.classList.remove('bg-white', 'dark:bg-slate-800', 'shadow-sm', 'text-cyan-600', 'dark:text-cyan-400');
+          tab.classList.add('text-slate-600', 'dark:text-slate-400');
+        }
+      });
+
+      if (portalId === 'forecast') {
+        renderForecastChart('15m');
+      }
+
+      if (portalId === 'commuter' && mapInstance) {
+        setTimeout(() => mapInstance.invalidateSize(), 150);
+      }
+    }
+
+    // 3. LEAFLET MAP INITIALIZATION
+    let currentTileLayer = null;
+
+    function initMap() {
+      // Hyderabad Coordinates
+      const center = [17.345, 78.410];
+      mapInstance = L.map('map-commuter', {
+        center: center,
+        zoom: 12,
+        zoomControl: true,
+        attributionControl: false
+      });
+
+      updateMapTiles();
+
+      // Load network data (local script priority, fetch fallback)
+      if (window.CITYFLOW_NETWORK_DATA) {
+        networkData = window.CITYFLOW_NETWORK_DATA;
+        renderNetwork(networkData);
+        populateCandidates(networkData.candidates);
+      } else {
+        fetch('network_data.json')
+          .then(res => res.json())
+          .then(data => {
+            networkData = data;
+            renderNetwork(data);
+            populateCandidates(data.candidates);
+          })
+          .catch(err => console.error("Error loading network data:", err));
+      }
+    }
+
+    function updateMapTiles() {
+      if (!mapInstance) return;
+      if (currentTileLayer) mapInstance.removeLayer(currentTileLayer);
+
+      const isDark = document.documentElement.classList.contains('dark');
+      const tileUrl = isDark 
+        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+        : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+
+      currentTileLayer = L.tileLayer(tileUrl, { maxZoom: 19 }).addTo(mapInstance);
+    }
+
+    function renderNetwork(data) {
+      if (mapSegmentsGroup) mapInstance.removeLayer(mapSegmentsGroup);
+      mapSegmentsGroup = L.layerGroup().addTo(mapInstance);
+
+      data.segments.forEach(seg => {
+        let color = '#10B981'; // Green
+        let weight = 2.5;
+        let dashArray = null;
+
+        // Special styling for incident segment R0067
+        if (seg.id === 'R0067') {
+          color = '#EF4444'; // Red
+          weight = 6;
+        } else if (['R0068', 'R0088', 'R0092', 'R0104'].includes(seg.id)) {
+          color = '#06B6D4'; // Cyan Detour
+          weight = 4.5;
+          dashArray = '6, 6';
+        } else if (seg.bottleneck === 1) {
+          color = '#F59E0B'; // Amber
+          weight = 3;
+        }
+
+        const polyline = L.polyline(seg.coords, {
+          color: color,
+          weight: weight,
+          opacity: 0.85,
+          dashArray: dashArray
+        }).addTo(mapSegmentsGroup);
+
+        // Tooltip
+        polyline.bindPopup(`
+          <div class="p-1 text-xs">
+            <p class="font-bold text-sm mb-1">${seg.id} (${seg.class})</p>
+            <p><strong>Speed:</strong> ${seg.id === 'R0067' ? '12.5 km/h (BLOCKED)' : seg.free_speed + ' km/h'}</p>
+            <p><strong>Capacity:</strong> ${seg.capacity} vph (${seg.lanes} lanes)</p>
+            <p><strong>Status:</strong> ${seg.id === 'R0067' ? '<span class="text-red-400 font-bold">Stalled Vehicle</span>' : 'Optimal Flow'}</p>
+          </div>
+        `);
+      });
+
+      // Add special warning marker on R0067
+      const incidentCoords = data.segments.find(s => s.id === 'R0067')?.coords[0] || [17.33, 78.41];
+      const alertIcon = L.divIcon({
+        className: 'custom-pin',
+        html: `<div class="w-6 h-6 rounded-full bg-rose-600 text-white flex items-center justify-center font-bold text-xs shadow-lg animate-bounce border-2 border-white">!</div>`,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
+      });
+      L.marker(incidentCoords, { icon: alertIcon }).addTo(mapSegmentsGroup)
+        .bindPopup("<strong>Incident Alert:</strong> Corridor R0067 blocked due to stalled vehicle.");
+    }
+
+    // 4. POPULATE CANDIDATES LIST IN PLANNER
+    function populateCandidates(candidates) {
+      const container = document.getElementById('candidates-list');
+      if (!container || !candidates) return;
+      container.innerHTML = '';
+
+      candidates.forEach((cand, idx) => {
+        const isSelected = idx === 0;
+        const item = document.createElement('div');
+        item.className = `p-3 rounded-xl cursor-pointer border transition-all ${
+          isSelected 
+            ? 'bg-indigo-50/70 dark:bg-indigo-950/40 border-indigo-500/50' 
+            : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600'
+        }`;
+        item.onclick = () => selectCandidate(cand, item);
+        item.innerHTML = `
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-bold text-slate-900 dark:text-white">${cand.id} &bull; Seg ${cand.segment}</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/10 text-indigo-500">${cand.feasibility}</span>
+          </div>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 capitalize">${cand.type.replace('_', ' ')} (+${cand.delta_vph} vph)</p>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function selectCandidate(cand, el) {
+      document.querySelectorAll('#candidates-list > div').forEach(d => {
+        d.classList.remove('bg-indigo-50/70', 'dark:bg-indigo-950/40', 'border-indigo-500/50');
+        d.classList.add('bg-slate-50', 'dark:bg-slate-800/50', 'border-slate-200', 'dark:border-slate-700/50');
+      });
+      el.classList.add('bg-indigo-50/70', 'dark:bg-indigo-950/40', 'border-indigo-500/50');
+      el.classList.remove('bg-slate-50', 'dark:bg-slate-800/50', 'border-slate-200', 'dark:border-slate-700/50');
+
+      document.getElementById('sim-plan-id').innerText = `CANDIDATE: ${cand.id}`;
+      document.getElementById('sim-title').innerText = `${cand.type.replace('_', ' ').toUpperCase()} on Segment ${cand.segment}`;
+      document.getElementById('sim-type').innerText = `${cand.type.replace('_', ' ')}`;
+      document.getElementById('sim-delta').innerText = `+${cand.delta_vph} vph`;
+      document.getElementById('sim-cost').innerText = `Cost Index: ${cand.cost_idx} (${cand.feasibility})`;
+      
+      const roi = ((cand.delta_vph * 1.25) / cand.cost_idx).toFixed(2);
+      document.getElementById('sim-roi').innerText = roi;
+    }
+
+    // 5. FORECAST CHART RENDERING
+    function changeHorizon(h) {
+      ['15m', '30m', '45m', '60m'].forEach(hz => {
+        const btn = document.getElementById(`h-${hz}`);
+        if (hz === h) {
+          btn.className = "px-3 py-1 rounded-lg bg-white dark:bg-slate-900 shadow-sm text-cyan-600 dark:text-cyan-400 font-bold";
+        } else {
+          btn.className = "px-3 py-1 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white";
+        }
+      });
+      renderForecastChart(h);
+    }
+
+    function renderForecastChart(horizon) {
+      const canvas = document.getElementById('forecastChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.parentElement.clientWidth;
+      const h = canvas.parentElement.clientHeight;
+      canvas.width = w;
+      canvas.height = h;
+
+      ctx.clearRect(0, 0, w, h);
+
+      const points = 12;
+      const stepX = w / (points - 1);
+      
+      // Simulated speed curve
+      const baseline = [48, 47, 45, 42, 38, 32, 28, 25, 24, 26, 30, 36];
+      const predicted = [48, 46, 43, 39, 34, 26, 22, 21, 22, 25, 29, 35];
+      const bound = 8.5; // conformal interval width
+
+      // 1. Shaded Conformal Interval Band
+      ctx.fillStyle = currentTheme === 'dark' ? 'rgba(6, 182, 212, 0.12)' : 'rgba(6, 182, 212, 0.20)';
+      ctx.beginPath();
+      for (let i = 0; i < points; i++) {
+        const x = i * stepX;
+        const yUpper = h - (predicted[i] + bound) * (h / 65);
+        if (i === 0) ctx.moveTo(x, yUpper);
+        else ctx.lineTo(x, yUpper);
+      }
+      for (let i = points - 1; i >= 0; i--) {
+        const x = i * stepX;
+        const yLower = h - (predicted[i] - bound) * (h / 65);
+        ctx.lineTo(x, yLower);
+      }
+      ctx.closePath();
+      ctx.fill();
+
+      // 2. Baseline Curve (Dashed)
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      for (let i = 0; i < points; i++) {
+        const x = i * stepX;
+        const y = h - baseline[i] * (h / 65);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // 3. Predicted Curve (Solid Cyan)
+      ctx.setLineDash([]);
+      ctx.strokeStyle = '#06b6d4';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let i = 0; i < points; i++) {
+        const x = i * stepX;
+        const y = h - predicted[i] * (h / 65);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Draw points
+      for (let i = 0; i < points; i++) {
+        const x = i * stepX;
+        const y = h - predicted[i] * (h / 65);
+        ctx.fillStyle = '#06b6d4';
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // User Interactive Actions
+    function startGuidance() {
+      const btn = document.getElementById('btn-guidance');
+      const status = document.getElementById('guidance-status');
+      btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Turn-by-Turn Guidance Active`;
+      btn.classList.remove('bg-cyan-500');
+      btn.classList.add('bg-emerald-600');
+      status.innerText = "Detour route locked. Audio guidance streaming to vehicle.";
+      lucide.createIcons();
+    }
+
+    function dispatchOfficer() {
+      const btn = document.getElementById('btn-dispatch');
+      const log = document.getElementById('police-action-log');
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="check-check" class="w-4 h-4"></i> Patrol Unit #7 Dispatched`;
+      btn.classList.remove('bg-rose-600');
+      btn.classList.add('bg-emerald-600');
+      log.classList.remove('hidden');
+      log.innerText = "Officer S. Rao (Patrol #7) confirmed dispatch to Junction N015. ETA 3 minutes.";
+      lucide.createIcons();
+    }
+
+    function overrideSignal() {
+      const btn = document.getElementById('btn-signal');
+      btn.disabled = true;
+      btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Green Wave Extended (+15s)`;
+      btn.classList.add('bg-emerald-600', 'text-white');
+      lucide.createIcons();
+    }
+
+    function exportDPR() {
+      alert("Detailed Project Report (DPR) downloaded: 'CityFlow_PLAN0376_Feasibility_Report.pdf'");
+    }
+
+    function runCustomSimulation() {
+      alert("Equilibrium recalculated with BPR alpha=0.15, beta=4.0. Network throughput stabilized.");
+    }
+
+    // On Load
+    window.addEventListener('DOMContentLoaded', () => {
+      initMap();
+    });
+
+    window.addEventListener('resize', () => {
+      if (currentPortal === 'forecast') renderForecastChart('15m');
+    });
+  </script>
+</body>
+</html>

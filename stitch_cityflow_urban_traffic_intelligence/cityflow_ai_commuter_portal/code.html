@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CityFlow AI - Commuter &amp; Driver Portal</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-primary": "#003640",
+            "secondary-container": "#00a572",
+            "secondary-fixed-dim": "#4edea3",
+            "tertiary-container": "#e79400",
+            "on-tertiary": "#472a00",
+            "surface": "#0c1322",
+            "surface-container-lowest": "#070e1d",
+            "tertiary": "#ffb95f",
+            "on-tertiary-container": "#563400",
+            "on-surface-variant": "#bcc9cd",
+            "tertiary-fixed": "#ffddb8",
+            "surface-container-highest": "#2e3545",
+            "surface-container": "#191f2f",
+            "on-secondary-container": "#00311f",
+            "on-tertiary-fixed": "#2a1700",
+            "surface-container-high": "#232a3a",
+            "surface-dim": "#0c1322",
+            "on-primary-fixed": "#001f26",
+            "error-container": "#93000a",
+            "background": "#0c1322",
+            "primary-container": "#06b6d4",
+            "error": "#ffb4ab",
+            "on-primary-container": "#00424f",
+            "outline": "#869397",
+            "on-error-container": "#ffdad6",
+            "surface-variant": "#2e3545",
+            "surface-container-low": "#141b2b",
+            "on-background": "#dce2f7",
+            "surface-bright": "#323949",
+            "primary-fixed-dim": "#4cd7f6",
+            "on-surface": "#dce2f7",
+            "on-secondary-fixed-variant": "#005236",
+            "tertiary-fixed-dim": "#ffb95f",
+            "inverse-on-surface": "#293040",
+            "secondary": "#4edea3",
+            "on-secondary-fixed": "#002113",
+            "primary-fixed": "#acedff",
+            "secondary-fixed": "#6ffbbe",
+            "on-tertiary-fixed-variant": "#653e00",
+            "outline-variant": "#3d494c",
+            "inverse-primary": "#00687a",
+            "primary": "#4cd7f6",
+            "on-error": "#690005",
+            "on-secondary": "#003824",
+            "on-primary-fixed-variant": "#004e5c",
+            "inverse-surface": "#dce2f7",
+            "surface-tint": "#4cd7f6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-md": "0.75rem",
+            "margin-mobile": "1rem",
+            "gutter-sm": "0.5rem",
+            "space-xl": "2rem",
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "margin": "1.5rem",
+            "space-lg": "1.25rem",
+            "gutter-lg": "1.5rem",
+            "gutter": "1rem"
+          },
+          "fontFamily": {
+            "display-lg": ["Inter"],
+            "display-lg-mobile": ["Inter"],
+            "headline-sm": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-lg": ["Inter"],
+            "label-code": ["JetBrains Mono"],
+            "label-telemetry": ["JetBrains Mono"],
+            "label-badge": ["JetBrains Mono"],
+            "body-sm": ["Inter"],
+            "body-md": ["Inter"],
+            "headline-md": ["Inter"]
+          },
+          "fontSize": {
+            "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "display-lg-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+            "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "body-lg": ["15px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "label-code": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "label-telemetry": ["11px", { "lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+            "label-badge": ["10px", { "lineHeight": "12px", "letterSpacing": "0.08em", "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "body-md": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    @keyframes pulse-intense {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(1.15); }
+    }
+    .animate-pulse-intense {
+      animation: pulse-intense 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes flow-dash {
+      to { stroke-dashoffset: -40; }
+    }
+    .traffic-flow-anim {
+      stroke-dasharray: 8, 6;
+      animation: flow-dash 1.2s linear infinite;
+    }
+    .traffic-blocked-anim {
+      stroke-dasharray: 6, 6;
+      animation: flow-dash 3s linear infinite;
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface antialiased overflow-hidden font-body-md text-body-md selection:bg-primary selection:text-on-primary">
+<!-- Top Navigation Bar (Shared Components standard: TopNavBar) -->
+<header class="w-full bg-surface/80 backdrop-blur-md shadow-sm z-50 fixed top-0 left-0 border-b border-outline-variant/30">
+<div class="flex justify-between items-center w-full px-6 py-3">
+<!-- Left: Brand Logo & Corridor Breadcrumb -->
+<div class="flex items-center gap-6">
+<div class="text-headline-sm font-headline-sm font-bold tracking-tight text-primary flex items-center gap-2 cursor-pointer">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="traffic">traffic</span>
+<span>CityFlow AI</span>
+<span class="text-xs px-2 py-0.5 rounded bg-primary-container/20 text-primary font-label-telemetry text-label-telemetry border border-primary/30 uppercase tracking-wider ml-1">COMMUTER</span>
+</div>
+<!-- Corridor Context Tracker -->
+<div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-low border border-outline-variant/40">
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="location_on" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<span class="font-label-telemetry text-label-telemetry text-on-surface tracking-wide">
+            📍 Hitec City to Financial District Corridor (Gachibowli Express Link)
+          </span>
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse ml-1"></span>
+</div>
+</div>
+<!-- Center: Search Bar with Destination Tags -->
+<div class="hidden md:flex flex-col items-center max-w-md w-full mx-4">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-base" data-icon="search">search</span>
+<input class="w-full pl-9 pr-20 py-1.5 text-xs bg-surface-container-lowest text-on-surface rounded-lg border border-outline-variant/60 focus:border-primary focus:ring-1 focus:ring-primary outline-none font-body-md" placeholder="Search destination or junction..." type="text" value="Financial District - WaveRock SEZ"/>
+<span class="absolute right-2.5 top-2 px-1.5 py-0.5 text-[10px] font-label-telemetry text-outline rounded bg-surface-container-high border border-outline-variant/40">⌘K</span>
+</div>
+<div class="flex items-center gap-2 mt-1.5 w-full overflow-x-auto no-scrollbar">
+<span class="text-[10px] text-on-surface-variant font-label-telemetry uppercase tracking-wider">Quick:</span>
+<button class="text-[10px] px-2 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors border border-outline-variant/30 whitespace-nowrap">Cyber Towers</button>
+<button class="text-[10px] px-2 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors border border-outline-variant/30 whitespace-nowrap">Mindspace Circle</button>
+<button class="text-[10px] px-2 py-0.5 rounded bg-primary-container/20 text-primary border border-primary/40 font-medium whitespace-nowrap">WaveRock</button>
+<button class="text-[10px] px-2 py-0.5 rounded bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors border border-outline-variant/30 whitespace-nowrap">Knowledge City</button>
+</div>
+</div>
+<!-- Right: Action & Profile Cluster -->
+<div class="flex items-center gap-3">
+<!-- Navigation Links from Blueprint -->
+<nav class="hidden xl:flex items-center gap-4 text-xs font-headline-sm mr-2">
+<a class="border-b-2 border-primary text-primary font-semibold pb-1" href="#">Corridors</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors pb-1" href="#">Telemetry</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors pb-1" href="#">Incidents</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors pb-1" href="#">Signal Control</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors pb-1" href="#">Analytics</a>
+</nav>
+<button class="p-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface border border-outline-variant/30 transition-all relative">
+<span class="material-symbols-outlined text-lg" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error animate-ping"></span>
+</button>
+<button class="p-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface border border-outline-variant/30 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="tune">tune</span>
+</button>
+<!-- Driver Profile Avatar -->
+<div class="flex items-center gap-2 pl-2 border-l border-outline-variant/30">
+<div class="relative">
+<img alt="Municipal Traffic Operations Director Avatar" class="w-8 h-8 rounded-full border border-primary/40 object-cover" data-alt="Close up professional portrait of a municipal transit corridor director wearing low-profile command center headset in a dimly lit dark tactical operations center illuminated by atmospheric cyan and deep blue monitor reflections." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZvmPCQJYpCmkywKSpNZiaCZ_z5FhvHwIXf-f7skDlY870My_PUejafnTN8gJxeSZka-JiDl0FZepZgDPLgfusKNNRFAnNtVpztg2GOJH3fy9O0pCaL0RT39CzR6wIkgZ6Rl2YBMcI8-_dHGC57jUmG-CdvNk31_1OH3Vj51_DkPCgYmeQYOJM6TyeRTfv4fGdLnxZu_nC_jt0j9FHwYrNTj9IHlLMjcFCK7bhTG9fS34CfOwfY0y1"/>
+<span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-secondary border border-surface"></span>
+</div>
+<div class="hidden sm:flex flex-col text-left">
+<span class="font-label-code text-label-code text-on-surface text-[11px] leading-tight">COMMUTER_492</span>
+<span class="font-label-telemetry text-label-telemetry text-secondary text-[9px] leading-tight">VERIFIED NAVIGATOR</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Viewport Canvas (Top offset for header) -->
+<main class="relative w-screen h-screen pt-20 pb-0 overflow-hidden bg-surface-container-lowest">
+<!-- Active Critical Warning Banner (Prominent across top of viewport) -->
+<div class="relative z-30 px-6 pt-2">
+<div class="w-full bg-error-container/85 backdrop-blur-md border border-error/50 rounded-xl px-4 py-2.5 shadow-lg shadow-error-container/20 flex flex-wrap items-center justify-between gap-3 text-on-error-container animate-pulse-subtle">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-lg bg-error/20 flex items-center justify-center border border-error/40 text-error">
+<span class="material-symbols-outlined text-lg" data-icon="warning" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm font-bold text-white flex items-center gap-2">
+<span>Corridor R0067 Blocked</span>
+<span class="text-xs px-2 py-0.5 rounded bg-error/30 text-error border border-error/40 font-label-badge text-label-badge">CRITICAL INCIDENT</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-error-container/90 mt-0.5">
+              Accident Ahead near N015 Junction — <span class="font-bold text-white">28 min estimated delay</span>. Dynamic reroute computed and active below.
+            </p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="hidden md:inline-flex items-center gap-1.5 font-label-telemetry text-label-telemetry px-2.5 py-1 rounded bg-surface/80 border border-outline-variant/40 text-primary">
+<span class="material-symbols-outlined text-xs" data-icon="sync">sync</span>
+            LIVE REROUTE ACTIVE
+          </span>
+<button class="px-3 py-1 bg-surface hover:bg-surface-container text-white text-xs font-semibold rounded-lg border border-outline-variant/50 transition-colors flex items-center gap-1">
+<span>Dismiss</span>
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+</div>
+</div>
+</div>
+<!-- GIS Map Background Simulation Layer -->
+<div class="absolute inset-0 z-0 bg-[#070e1d] overflow-hidden">
+<!-- Grid Terrain Backdrop -->
+<div class="absolute inset-0 opacity-15" style="background-image: radial-gradient(#4cd7f6 1px, transparent 1px); background-size: 32px 32px;"></div>
+<!-- SVG GIS Network Visualizer (Hyderabad Hitec City -> Financial Dist Corridor) -->
+<svg class="w-full h-full absolute inset-0 pointer-events-none" preserveaspectratio="xMidYMid slice" viewbox="0 0 1600 900">
+<defs>
+<!-- Gradient for Active Reroute Path -->
+<lineargradient id="detourGradient" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#4edea3"></stop>
+<stop offset="60%" stop-color="#06b6d4"></stop>
+<stop offset="100%" stop-color="#4cd7f6"></stop>
+</lineargradient>
+<!-- Glow Filters -->
+<filter height="140%" id="glow-cyan" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="6"></fegaussianblur>
+<femerge>
+<femergenode in="blur"></femergenode>
+<femergenode in="SourceGraphic"></femergenode>
+</femerge>
+</filter>
+<filter height="160%" id="glow-red" width="160%" x="-30%" y="-30%">
+<fegaussianblur result="blur" stddeviation="8"></fegaussianblur>
+<femerge>
+<femergenode in="blur"></femergenode>
+<femergenode in="SourceGraphic"></femergenode>
+</femerge>
+</filter>
+<!-- Arrow Marker for Diversion Path -->
+<marker id="arrow-green" markerheight="6" markerwidth="6" orient="auto-start-reverse" refx="5" refy="5" viewbox="0 0 10 10">
+<path d="M 0 1 L 10 5 L 0 9 z" fill="#4edea3"></path>
+</marker>
+</defs>
+<!-- Secondary Arterials / City Grid (Slate Base) -->
+<g opacity="0.6" stroke="#1e293b" stroke-linecap="round" stroke-width="3">
+<line x1="200" x2="1400" y1="150" y2="200"></line>
+<line x1="300" x2="1200" y1="850" y2="800"></line>
+<line x1="750" x2="780" y1="50" y2="850"></line>
+<line x1="1100" x2="1050" y1="100" y2="800"></line>
+<line x1="450" x2="450" y1="200" y2="850"></line>
+<line x1="200" x2="1450" y1="400" y2="520"></line>
+<line x1="350" x2="1350" y1="650" y2="620"></line>
+<path d="M 500,200 Q 650,450 850,350 T 1300,500" fill="none" stroke="#1f293d" stroke-width="4"></path>
+</g>
+<!-- Live Traffic Heat Arteries (Moderate Congestion Trails) -->
+<g fill="none" stroke-linecap="round">
+<line opacity="0.6" stroke="#ffb95f" stroke-width="4" x1="480" x2="680" y1="310" y2="315"></line>
+<line opacity="0.7" stroke="#00a572" stroke-width="4" x1="1150" x2="1350" y1="450" y2="580"></line>
+<line opacity="0.8" stroke="#00a572" stroke-width="4" x1="550" x2="900" y1="720" y2="710"></line>
+</g>
+<!-- BLOCKED CORRIDOR: R0067 (Straight Original Path through N015 Junction) -->
+<g>
+<!-- Underlay Road -->
+<path d="M 560,460 L 820,470 L 1020,480" fill="none" stroke="#2a1114" stroke-linecap="round" stroke-width="12"></path>
+<!-- Blocked Red Trail -->
+<path class="traffic-blocked-anim" d="M 560,460 L 820,470 L 1020,480" fill="none" filter="url(#glow-red)" stroke="#ef4444" stroke-linecap="round" stroke-width="6"></path>
+</g>
+<!-- RECOMMENDED DIVERSION PATH: via Cyber Gateway Flyover -> Bio-Diversity Junction -> ISB Road -->
+<g>
+<!-- Neon Green Detour Outer Glow Base -->
+<path d="M 560,460 L 620,360 Q 730,290 880,310 L 1040,340 Q 1120,380 1100,470 L 1020,480" fill="none" stroke="#06b6d4" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.25" stroke-width="14"></path>
+<!-- Detour Animated Active Pulse Trail -->
+<path class="traffic-flow-anim" d="M 560,460 L 620,360 Q 730,290 880,310 L 1040,340 Q 1120,380 1100,470 L 1020,480" fill="none" filter="url(#glow-cyan)" stroke="url(#detourGradient)" stroke-linecap="round" stroke-linejoin="round" stroke-width="6"></path>
+</g>
+<!-- Junction Nodes & Waypoint Markers -->
+<!-- Starting Point: Hitec City Node -->
+<g transform="translate(560, 460)">
+<circle class="animate-ping" fill="#06b6d4" fill-opacity="0.2" r="16"></circle>
+<circle fill="#0c1322" r="9" stroke="#4cd7f6" stroke-width="3"></circle>
+<circle fill="#4cd7f6" r="4"></circle>
+</g>
+<!-- Detour Waypoint 1: Cyber Gateway Flyover Ramp -->
+<g transform="translate(730, 290)">
+<circle fill="#0c1322" r="6" stroke="#4edea3" stroke-width="2.5"></circle>
+<circle fill="#4edea3" r="2.5"></circle>
+</g>
+<!-- Detour Waypoint 2: Bio-Diversity Junction Bypass -->
+<g transform="translate(1040, 340)">
+<circle fill="#0c1322" r="6" stroke="#4edea3" stroke-width="2.5"></circle>
+<circle fill="#4edea3" r="2.5"></circle>
+</g>
+<!-- Blocked Incident Point: N015 Junction (Accident) -->
+<g transform="translate(820, 470)">
+<circle class="animate-pulse" fill="#ef4444" fill-opacity="0.3" r="22"></circle>
+<circle fill="#93000a" r="12" stroke="#ffb4ab" stroke-width="2"></circle>
+</g>
+<!-- Destination Node: WaveRock Financial Dist -->
+<g transform="translate(1020, 480)">
+<circle fill="#4edea3" fill-opacity="0.25" r="14"></circle>
+<circle fill="#00311f" r="8" stroke="#4edea3" stroke-width="2.5"></circle>
+<circle fill="#ffffff" r="3"></circle>
+</g>
+</svg>
+<!-- Map Overlay Floating Badges & Incident Markers (HTML for crisp typography & Material Symbols) -->
+<!-- Origin Label -->
+<div class="absolute top-[49%] left-[34%] transform -translate-y-full -translate-x-1/2 z-10 pointer-events-none">
+<div class="bg-surface-container/90 backdrop-blur-md px-2.5 py-1 rounded border border-primary/40 text-[11px] font-label-code text-primary shadow-md flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span>START: HITEC CITY NODE</span>
+</div>
+</div>
+<!-- Accident Warning Card on Map -->
+<div class="absolute top-[50%] left-[51%] transform -translate-x-1/2 z-20">
+<div class="bg-surface-container-lowest/95 backdrop-blur-md border border-error px-3 py-2 rounded-lg shadow-xl shadow-error-container/40 flex items-center gap-2.5 max-w-xs animate-bounce" style="animation-duration: 3s;">
+<div class="w-8 h-8 rounded-full bg-error-container flex items-center justify-center text-error border border-error shrink-0">
+<span class="material-symbols-outlined text-base" data-icon="car_crash" style="font-variation-settings: 'FILL' 1;">car_crash</span>
+</div>
+<div>
+<div class="font-label-code text-label-code text-error font-bold flex items-center gap-1">
+<span>💥 ACCIDENT (R0067)</span>
+</div>
+<div class="text-[10px] font-label-telemetry text-on-surface-variant">Junction N015 • Lane 1-3 Inactive</div>
+</div>
+</div>
+</div>
+<!-- Cyber Gateway Flyover Waypoint Tag -->
+<div class="absolute top-[31%] left-[45%] z-10 pointer-events-none">
+<div class="bg-surface-container-high/90 backdrop-blur-md px-2 py-0.5 rounded border border-secondary/50 text-[10px] font-label-telemetry text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="turn_right">turn_right</span>
+<span>Cyber Gateway Flyover (Elevated)</span>
+</div>
+</div>
+<!-- Destination Label -->
+<div class="absolute top-[52%] left-[64%] z-10 pointer-events-none">
+<div class="bg-surface-container-lowest/90 backdrop-blur-md px-2.5 py-1 rounded border border-secondary/60 text-[11px] font-label-code text-secondary shadow-md flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm" data-icon="flag" style="font-variation-settings: 'FILL' 1;">flag</span>
+<span>DESTINATION: WAVEROCK SEZ</span>
+</div>
+</div>
+<!-- Map Watermark & Precision Telemetry HUD (Bottom Right) -->
+<div class="absolute bottom-6 right-6 z-20 flex flex-col items-end gap-2 pointer-events-auto">
+<div class="flex items-center gap-1 bg-surface-container-lowest/80 backdrop-blur-md border border-outline-variant/30 rounded-lg p-1">
+<button class="w-8 h-8 flex items-center justify-center rounded bg-surface hover:bg-surface-container text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-surface hover:bg-surface-container text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="remove">remove</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-surface hover:bg-surface-container text-on-surface hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="layers">layers</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-surface hover:bg-surface-container text-primary transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="my_location">my_location</span>
+</button>
+</div>
+<div class="bg-surface-container-lowest/85 backdrop-blur-md px-3 py-1.5 rounded-md border border-outline-variant/20 font-label-telemetry text-label-telemetry text-outline text-[10px] text-right">
+<div>LOC: 17.4435° N, 78.3772° E // HYD-ZONE-4</div>
+<div class="text-secondary">AI DYNAMIC RE-ROUTING ENGINE v4.2</div>
+</div>
+</div>
+</div>
+<!-- Left Sidebar: Glassmorphic Tactical Navigation Panel (Anchored) -->
+<div class="absolute top-24 left-6 bottom-6 w-full max-w-sm z-30 flex flex-col gap-3 pointer-events-none">
+<!-- Primary Route Recommendation Card -->
+<div class="pointer-events-auto bg-surface-container-lowest/90 backdrop-blur-xl border border-outline-variant/40 rounded-xl p-4 shadow-2xl flex flex-col gap-3.5 overflow-hidden relative">
+<!-- Subtle Top Glow Line -->
+<div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-secondary via-primary to-primary-container"></div>
+<!-- Card Header -->
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-1.5 text-secondary font-label-telemetry text-label-telemetry tracking-wider uppercase">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>Optimal Diversion</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm font-bold text-white mt-0.5">
+              Recommended Detour via Cyber Gateway Flyover
+            </h2>
+</div>
+<span class="material-symbols-outlined text-primary text-xl" data-icon="alt_route">alt_route</span>
+</div>
+<!-- Key Telemetry Badges Grid -->
+<div class="grid grid-cols-2 gap-2">
+<!-- Badge 1: Time Saved -->
+<div class="bg-surface-container-high/60 border border-secondary/40 rounded-lg p-2.5">
+<div class="font-label-telemetry text-label-telemetry text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-secondary" data-icon="schedule">schedule</span>
+<span>Time Saved</span>
+</div>
+<div class="text-lg font-bold font-headline-sm text-secondary mt-0.5 flex items-baseline gap-1">
+<span>-14</span>
+<span class="text-xs font-normal text-on-surface-variant">Minutes</span>
+</div>
+</div>
+<!-- Badge 2: Distance Delta -->
+<div class="bg-surface-container-high/60 border border-primary/40 rounded-lg p-2.5">
+<div class="font-label-telemetry text-label-telemetry text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="straighten">straighten</span>
+<span>Distance</span>
+</div>
+<div class="text-lg font-bold font-headline-sm text-primary mt-0.5 flex items-baseline gap-1">
+<span>+1.2</span>
+<span class="text-xs font-normal text-on-surface-variant">km</span>
+</div>
+</div>
+<!-- Badge 3: Turn Restrictions -->
+<div class="bg-surface-container-high/60 border border-outline-variant/30 rounded-lg p-2">
+<div class="font-label-telemetry text-label-telemetry text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="verified_user">verified_user</span>
+<span>Restrictions</span>
+</div>
+<div class="font-label-code text-[11px] text-white font-medium mt-1">
+              Fully Honored
+            </div>
+</div>
+<!-- Badge 4: Congestion Index -->
+<div class="bg-surface-container-high/60 border border-outline-variant/30 rounded-lg p-2">
+<div class="font-label-telemetry text-label-telemetry text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-secondary" data-icon="speed">speed</span>
+<span>Congestion</span>
+</div>
+<div class="font-label-code text-[11px] text-secondary font-medium mt-1">
+              18% (Free Flow)
+            </div>
+</div>
+</div>
+<!-- Step-by-Step Turn Guidance Summary -->
+<div class="bg-surface-container-low rounded-lg p-3 border border-outline-variant/30">
+<div class="font-label-telemetry text-label-telemetry text-outline mb-1.5 uppercase tracking-wide flex items-center justify-between">
+<span>Dynamic Step Guidance</span>
+<span class="text-[10px] text-secondary">4 Segments</span>
+</div>
+<div class="space-y-1.5 text-xs text-on-surface">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0"></span>
+<span class="font-medium text-white">Continue 400m</span>
+<span class="text-outline">➔</span>
+<span>Take Cyber Gateway Flyover Ramp</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary shrink-0"></span>
+<span>Bypass Junction N015</span>
+<span class="text-outline">➔</span>
+<span>Re-join ISB Road</span>
+</div>
+</div>
+</div>
+<!-- Primary Action Trigger -->
+<button class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-secondary to-primary-container hover:from-secondary-fixed hover:to-primary text-surface-container-lowest font-headline-sm font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-secondary/25 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-lg font-bold" data-icon="navigation" style="font-variation-settings: 'FILL' 1;">navigation</span>
+<span>Start Navigation</span>
+</button>
+</div>
+<!-- Secondary Panel: Report Live Road Condition -->
+<div class="pointer-events-auto bg-surface-container-lowest/90 backdrop-blur-xl border border-outline-variant/40 rounded-xl p-3.5 shadow-xl flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<div class="font-headline-sm text-xs font-semibold text-white flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-base" data-icon="report">report</span>
+<span>Report Live Road Condition</span>
+</div>
+<span class="font-label-telemetry text-label-telemetry text-outline text-[10px]">Instant Broadcast</span>
+</div>
+<!-- Quick Reporting Chips -->
+<div class="grid grid-cols-2 gap-1.5">
+<button class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-surface-container-low hover:bg-error/20 border border-outline-variant/40 hover:border-error/50 text-xs text-on-surface transition-all text-left group">
+<span class="material-symbols-outlined text-error text-sm group-hover:scale-110 transition-transform" data-icon="car_crash">car_crash</span>
+<span class="text-[11px] font-medium">Accident</span>
+</button>
+<button class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-surface-container-low hover:bg-primary/20 border border-outline-variant/40 hover:border-primary/50 text-xs text-on-surface transition-all text-left group">
+<span class="material-symbols-outlined text-primary text-sm group-hover:scale-110 transition-transform" data-icon="water">water</span>
+<span class="text-[11px] font-medium">Waterlogging</span>
+</button>
+<button class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-surface-container-low hover:bg-tertiary/20 border border-outline-variant/40 hover:border-tertiary/50 text-xs text-on-surface transition-all text-left group">
+<span class="material-symbols-outlined text-tertiary text-sm group-hover:scale-110 transition-transform" data-icon="traffic_jam">traffic_jam</span>
+<span class="text-[11px] font-medium">Signal Failure</span>
+</button>
+<button class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-surface-container-low hover:bg-tertiary-container/20 border border-outline-variant/40 hover:border-tertiary/50 text-xs text-on-surface transition-all text-left group">
+<span class="material-symbols-outlined text-tertiary-fixed text-sm group-hover:scale-110 transition-transform" data-icon="construction">construction</span>
+<span class="text-[11px] font-medium">Road Work</span>
+</button>
+</div>
+</div>
+<!-- Commuter Live Feed Widget (Timestamped micro-report) -->
+<div class="pointer-events-auto bg-surface-container-lowest/85 backdrop-blur-md border border-outline-variant/30 rounded-xl p-3 shadow-lg">
+<div class="flex items-start gap-2.5">
+<div class="w-6 h-6 rounded bg-primary-container/20 border border-primary/40 flex items-center justify-center text-primary shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-xs" data-icon="campaign">campaign</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="font-label-telemetry text-label-telemetry text-secondary text-[10px]">COMMUTER LIVE FEED</span>
+<span class="font-label-telemetry text-[9px] text-outline">1m ago</span>
+</div>
+<p class="text-xs text-on-surface-variant font-body-sm mt-0.5 leading-snug">
+<span class="text-white font-medium">Recent report by Commuter #492:</span> Crane clearance in progress on R0067.
+            </p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

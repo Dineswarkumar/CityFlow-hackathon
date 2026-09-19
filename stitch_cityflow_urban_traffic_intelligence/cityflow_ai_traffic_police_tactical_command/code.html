@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CityFlow AI - Sector 04 Tactical Command</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-primary": "#003640",
+            "secondary-container": "#00a572",
+            "secondary-fixed-dim": "#4edea3",
+            "tertiary-container": "#e79400",
+            "on-tertiary": "#472a00",
+            "surface": "#0c1322",
+            "surface-container-lowest": "#070e1d",
+            "tertiary": "#ffb95f",
+            "on-tertiary-container": "#563400",
+            "on-surface-variant": "#bcc9cd",
+            "tertiary-fixed": "#ffddb8",
+            "surface-container-highest": "#2e3545",
+            "surface-container": "#191f2f",
+            "on-secondary-container": "#00311f",
+            "on-tertiary-fixed": "#2a1700",
+            "surface-container-high": "#232a3a",
+            "surface-dim": "#0c1322",
+            "on-primary-fixed": "#001f26",
+            "error-container": "#93000a",
+            "background": "#0c1322",
+            "primary-container": "#06b6d4",
+            "error": "#ffb4ab",
+            "on-primary-container": "#00424f",
+            "outline": "#869397",
+            "on-error-container": "#ffdad6",
+            "surface-variant": "#2e3545",
+            "surface-container-low": "#141b2b",
+            "on-background": "#dce2f7",
+            "surface-bright": "#323949",
+            "primary-fixed-dim": "#4cd7f6",
+            "on-surface": "#dce2f7",
+            "on-secondary-fixed-variant": "#005236",
+            "tertiary-fixed-dim": "#ffb95f",
+            "inverse-on-surface": "#293040",
+            "secondary": "#4edea3",
+            "on-secondary-fixed": "#002113",
+            "primary-fixed": "#acedff",
+            "secondary-fixed": "#6ffbbe",
+            "on-tertiary-fixed-variant": "#653e00",
+            "outline-variant": "#3d494c",
+            "inverse-primary": "#00687a",
+            "primary": "#4cd7f6",
+            "on-error": "#690005",
+            "on-secondary": "#003824",
+            "on-primary-fixed-variant": "#004e5c",
+            "inverse-surface": "#dce2f7",
+            "surface-tint": "#4cd7f6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-md": "0.75rem",
+            "margin-mobile": "1rem",
+            "gutter-sm": "0.5rem",
+            "space-xl": "2rem",
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "margin": "1.5rem",
+            "space-lg": "1.25rem",
+            "gutter-lg": "1.5rem",
+            "gutter": "1rem"
+          },
+          "fontFamily": {
+            "display-lg": ["Inter"],
+            "display-lg-mobile": ["Inter"],
+            "headline-sm": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-lg": ["Inter"],
+            "label-code": ["JetBrains Mono"],
+            "label-telemetry": ["JetBrains Mono"],
+            "label-badge": ["JetBrains Mono"],
+            "body-sm": ["Inter"],
+            "body-md": ["Inter"],
+            "headline-md": ["Inter"]
+          },
+          "fontSize": {
+            "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "display-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+            "headline-sm": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+            "body-lg": ["15px", {"lineHeight": "22px", "fontWeight": "400"}],
+            "headline-lg": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+            "label-code": ["13px", {"lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+            "label-telemetry": ["11px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+            "label-badge": ["10px", {"lineHeight": "12px", "letterSpacing": "0.08em", "fontWeight": "700"}],
+            "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+            "body-md": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+            "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.18); }
+    }
+    .animate-pulse-glow {
+      animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    .gis-grid {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md text-body-md h-screen w-screen overflow-hidden flex flex-col select-none">
+<!-- Top Tactical Command Header (TopNavBar Shared Component Execution) -->
+<header class="flex justify-between items-center w-full px-6 py-3 border-b border-outline-variant/30 bg-surface/80 backdrop-blur-md shadow-sm fixed top-0 left-0 right-0 z-50 h-16">
+<div class="flex items-center gap-6">
+<div class="text-headline-sm font-headline-sm font-bold tracking-tight text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]" data-icon="hub">hub</span>
+<span>CityFlow AI</span>
+</div>
+<div class="h-5 w-[1px] bg-outline-variant/40"></div>
+<div>
+<div class="text-label-code font-label-code font-bold tracking-wider text-on-surface flex items-center gap-2">
+<span>HYDERABAD METROPOLITAN TRAFFIC POLICE</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-highest text-primary font-label-badge text-label-badge border border-outline-variant/40">SECTOR 04 TACTICAL DESK</span>
+</div>
+</div>
+</div>
+<!-- Navigation Links mapped from JSON -->
+<nav class="hidden lg:flex items-center gap-6">
+<a class="border-b-2 border-primary text-primary font-semibold pb-1 text-label-code font-label-code" href="#">Corridors</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors pb-1 text-label-code font-label-code" href="#">Telemetry</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors pb-1 text-label-code font-label-code" href="#">Incidents</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors pb-1 text-label-code font-label-code" href="#">Signal Control</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors pb-1 text-label-code font-label-code" href="#">Analytics</a>
+</nav>
+<!-- Header Actions & Officer Profile -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded border border-outline-variant/30 font-label-telemetry text-label-telemetry">
+<span class="text-on-surface-variant">UTC 09:42:18</span>
+<span class="text-outline">/</span>
+<span class="text-secondary font-bold">IST 15:12:18</span>
+</div>
+<button class="bg-error-container/30 border border-error/50 hover:bg-error-container/50 text-error px-3 py-1.5 rounded text-label-code font-label-code font-bold flex items-center gap-1.5 transition-all duration-150 active:scale-[0.98]">
+<span class="material-symbols-outlined text-[16px]" data-icon="warning">warning</span>
+        Emergency Override
+      </button>
+<button class="bg-primary hover:bg-primary-fixed text-on-primary px-3 py-1.5 rounded text-label-code font-label-code font-bold flex items-center gap-1.5 transition-all duration-150 active:scale-[0.98]">
+<span class="material-symbols-outlined text-[16px]" data-icon="send">send</span>
+        Dispatch Unit
+      </button>
+<div class="flex items-center gap-2 pl-2 border-l border-outline-variant/40">
+<button class="p-1.5 rounded hover:bg-surface-container-high/60 text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-[20px]" data-icon="notifications">notifications</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container-high/60 text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-[20px]" data-icon="tune">tune</span>
+</button>
+<div class="flex items-center gap-2 ml-1 bg-surface-container-low px-2.5 py-1 rounded border border-outline-variant/40">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="person">person</span>
+<div class="text-left">
+<div class="text-label-code font-label-code font-bold text-on-surface leading-tight">Warden Supv. K. Srinivas</div>
+<div class="text-label-telemetry font-label-telemetry text-on-surface-variant">ID: #TP-884</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Side Navigation Rail (SideNavBar Shared Component Execution) -->
+<aside class="fixed left-0 top-0 h-full w-64 flex flex-col justify-between border-r border-outline-variant/30 z-40 pt-16 bg-surface-container-lowest/90 backdrop-blur-lg">
+<div>
+<!-- Sector Identifier Header -->
+<div class="px-5 py-4 border-b border-outline-variant/20 bg-surface-container-low/50">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded bg-primary/10 border border-primary/30 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[16px]" data-icon="shield">shield</span>
+</div>
+<div>
+<div class="text-label-code font-label-code font-bold tracking-wider text-primary">SECTOR 04 COMMAND</div>
+<div class="text-label-telemetry font-label-telemetry text-secondary flex items-center gap-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary inline-block animate-pulse"></span>
+              STATUS: OPTIMAL // 12ms
+            </div>
+</div>
+</div>
+</div>
+<!-- Tactical Tabs -->
+<nav class="mt-3 space-y-0.5 px-2">
+<a class="bg-surface-container-high text-primary border-l-2 border-primary font-medium px-4 py-2.5 flex items-center gap-3 rounded-r text-label-code font-label-code" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="hub">hub</span>
+<span>Network Overview</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 px-4 py-2.5 flex items-center gap-3 rounded transition-colors text-label-code font-label-code" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="traffic">traffic</span>
+<span>Corridor Ops</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 px-4 py-2.5 flex items-center gap-3 rounded transition-colors text-label-code font-label-code" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="traffic_jam">traffic_jam</span>
+<span>Signal Matrix</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 px-4 py-2.5 flex items-center gap-3 rounded transition-colors text-label-code font-label-code" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="local_police">local_police</span>
+<span>Fleet Dispatch</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 px-4 py-2.5 flex items-center gap-3 rounded transition-colors text-label-code font-label-code" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="description">description</span>
+<span>DPR Reporting</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 px-4 py-2.5 flex items-center gap-3 rounded transition-colors text-label-code font-label-code" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="settings">settings</span>
+<span>System Audit</span>
+</a>
+</nav>
+</div>
+<!-- SideNav Bottom CTA & Footers -->
+<div class="p-3 border-t border-outline-variant/30 space-y-3">
+<button class="w-full bg-primary-container text-on-primary-container font-label-code font-bold py-2.5 px-3 rounded flex items-center justify-center gap-2 hover:brightness-110 active:scale-[0.99] transition-all shadow-md">
+<span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+        Signal Override
+      </button>
+<div class="space-y-0.5 pt-1">
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/50 text-label-code font-label-code px-3 py-1.5 rounded flex items-center gap-2.5" href="#">
+<span class="material-symbols-outlined text-[16px]" data-icon="monitor_heart">monitor_heart</span>
+          Diagnostics
+        </a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high/50 text-label-code font-label-code px-3 py-1.5 rounded flex items-center gap-2.5" href="#">
+<span class="material-symbols-outlined text-[16px]" data-icon="terminal">terminal</span>
+          Terminal
+        </a>
+</div>
+</div>
+</aside>
+<!-- Primary Mission Control Canvas (Offset by side rail and header) -->
+<main class="ml-64 mt-16 flex-1 flex flex-col h-[calc(100vh-4rem)] overflow-hidden bg-background">
+<!-- High-Impact Telemetry Ribbon / Status Bar -->
+<section class="h-12 bg-surface-container-lowest border-b border-outline-variant/30 px-5 flex items-center justify-between shrink-0">
+<div class="flex items-center gap-6">
+<!-- 120 Junctions Monitored -->
+<div class="flex items-center gap-2">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-secondary"></span>
+</span>
+<span class="text-label-code font-label-code font-bold text-on-surface">120 Junctions Monitored</span>
+<span class="text-label-badge font-label-badge px-1.5 py-0.5 rounded bg-secondary/15 text-secondary border border-secondary/30">ONLINE</span>
+</div>
+<div class="h-4 w-[1px] bg-outline-variant/30"></div>
+<!-- 3 Active Congestion Hotspots -->
+<div class="flex items-center gap-2">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-tertiary"></span>
+</span>
+<span class="text-label-code font-label-code font-bold text-tertiary">3 Active Congestion Hotspots</span>
+<span class="text-label-badge font-label-badge px-1.5 py-0.5 rounded bg-tertiary/15 text-tertiary border border-tertiary/30">ELEVATED</span>
+</div>
+<div class="h-4 w-[1px] bg-outline-variant/30"></div>
+<!-- 8 Officers Dispatched -->
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="local_police">local_police</span>
+<span class="text-label-code font-label-code font-bold text-primary">8 Officers Dispatched</span>
+<span class="text-label-badge font-label-badge px-1.5 py-0.5 rounded bg-primary/15 text-primary border border-primary/30">EN ROUTE / ON SCENE</span>
+</div>
+<div class="h-4 w-[1px] bg-outline-variant/30"></div>
+<!-- Signal AI Sync: Active -->
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="text-label-code font-label-code font-bold text-primary">Signal AI Sync: Active</span>
+<span class="text-label-telemetry font-label-telemetry text-on-surface-variant">// 99.8% uptime</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-label-telemetry font-label-telemetry text-on-surface-variant flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-secondary" data-icon="radar">radar</span>
+          GEO-RADAR: CYBERABAD / GACHIBOWLI GRID
+        </span>
+<button class="text-label-telemetry font-label-telemetry bg-surface-container-high hover:bg-surface-bright text-on-surface px-2 py-1 rounded border border-outline-variant/40 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" data-icon="refresh">refresh</span>
+          AUTO-REFRESH: 5s
+        </button>
+</div>
+</section>
+<!-- Main Screen Split View -->
+<div class="flex-1 flex overflow-hidden">
+<!-- Left Column (60% width): Interactive GIS Telemetry Map -->
+<section class="w-[60%] h-full relative border-r border-outline-variant/30 bg-[#070e1d] flex flex-col">
+<!-- GIS Map Top HUD Bar -->
+<div class="absolute top-4 left-4 right-4 z-20 flex justify-between items-start pointer-events-none">
+<div class="bg-surface-container-high/90 backdrop-blur-md px-3 py-2 rounded border border-outline-variant/40 shadow-lg pointer-events-auto flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="my_location">my_location</span>
+<span class="text-label-code font-label-code font-bold text-on-surface">GIS HUD // HYDERABAD IT CORRIDOR</span>
+</div>
+<div class="text-label-telemetry font-label-telemetry text-on-surface-variant bg-surface-container-low px-2 py-0.5 rounded border border-outline-variant/30">
+              COORD: 17.4435° N, 78.3772° E
+            </div>
+</div>
+<!-- Overlay Layer Toggles -->
+<div class="bg-surface-container-high/90 backdrop-blur-md p-1.5 rounded border border-outline-variant/40 shadow-lg pointer-events-auto flex items-center gap-1">
+<button class="px-2.5 py-1 rounded text-label-telemetry font-label-telemetry bg-primary/20 text-primary border border-primary/40 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="timer">timer</span>
+              Signal Timers
+            </button>
+<button class="px-2.5 py-1 rounded text-label-telemetry font-label-telemetry bg-primary/20 text-primary border border-primary/40 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="local_police">local_police</span>
+              Patrol Units (1-8)
+            </button>
+<button class="px-2.5 py-1 rounded text-label-telemetry font-label-telemetry bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="videocam">videocam</span>
+              CCTV Streams
+            </button>
+<button class="px-2.5 py-1 rounded text-label-telemetry font-label-telemetry bg-surface-container text-on-surface-variant hover:text-on-surface flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]" data-icon="alt_route">alt_route</span>
+              Turn Restrictions
+            </button>
+</div>
+</div>
+<!-- Interactive Tactical GIS Canvas with SVG overlays -->
+<div class="w-full h-full relative gis-grid overflow-hidden">
+<!-- Stylized Dark Tactical Map Graphic -->
+<svg class="w-full h-full absolute inset-0 select-none" fill="none" viewbox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+<!-- Grid Waterbody / Durgam Cheruvu hint -->
+<path d="M 520 80 Q 560 140 620 220 T 710 320 Q 750 400 780 430 L 800 380 L 800 80 Z" fill="#0c192d" opacity="0.4"></path>
+<!-- Secondary Road Arteries -->
+<path d="M 80 500 L 720 480" stroke="#1f293d" stroke-linecap="round" stroke-width="6"></path>
+<path d="M 220 100 L 250 560" stroke="#1f293d" stroke-width="5"></path>
+<path d="M 120 220 L 750 180" stroke="#1f293d" stroke-width="4"></path>
+<!-- Corridors Defined in Prompt -->
+<!-- Corridor R0065 (Free Flow - Green) -->
+<g>
+<path d="M 100 160 L 320 280 L 460 310" id="corridor-r0065" opacity="0.9" stroke="#00a572" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"></path>
+<path d="M 100 160 L 320 280 L 460 310" stroke="#4edea3" stroke-dasharray="8 6" stroke-width="2"></path>
+</g>
+<!-- Corridor R0082 (Moderate - Yellow/Amber) -->
+<g>
+<path d="M 320 280 L 380 440 L 480 520" id="corridor-r0082" opacity="0.9" stroke="#e79400" stroke-linecap="round" stroke-linejoin="round" stroke-width="7"></path>
+<path d="M 320 280 L 380 440 L 480 520" stroke="#ffb95f" stroke-dasharray="6 4" stroke-width="2"></path>
+</g>
+<!-- Corridor R0067 (Critical Jam - Glowing Crimson / Red) -->
+<g>
+<path d="M 460 310 L 640 260 L 760 290" id="corridor-r0067" opacity="0.85" stroke="#dc2626" stroke-linecap="round" stroke-linejoin="round" stroke-width="9"></path>
+<path class="animate-pulse" d="M 460 310 L 640 260 L 760 290" stroke="#ffb4ab" stroke-dasharray="4 4" stroke-width="3"></path>
+</g>
+<!-- Junction Nodes -->
+<!-- Node N012 -->
+<g transform="translate(100, 160)">
+<circle fill="#0c1322" r="9" stroke="#4edea3" stroke-width="2"></circle>
+<circle fill="#4edea3" r="3"></circle>
+</g>
+<!-- Node N014 -->
+<g transform="translate(320, 280)">
+<circle fill="#0c1322" r="9" stroke="#4cd7f6" stroke-width="2"></circle>
+<circle fill="#4cd7f6" r="3"></circle>
+</g>
+<!-- Node N018 -->
+<g transform="translate(480, 520)">
+<circle fill="#0c1322" r="9" stroke="#ffb95f" stroke-width="2"></circle>
+<circle fill="#ffb95f" r="3"></circle>
+</g>
+<!-- Node N015 on Corridor R0067 - CRITICAL BOTTLE-NECK with Animated Hazard Ring -->
+<g transform="translate(640, 260)">
+<!-- Flashing Radar Hazard Rings -->
+<circle class="animate-ping" fill="none" opacity="0.3" r="32" stroke="#ef4444" stroke-width="1.5" style="animation-duration: 2.5s;"></circle>
+<circle class="animate-pulse" fill="none" opacity="0.6" r="22" stroke="#ef4444" stroke-width="1.5"></circle>
+<circle fill="#93000a" r="12" stroke="#ffb4ab" stroke-width="2.5"></circle>
+<circle class="animate-pulse" fill="#ffffff" r="4"></circle>
+</g>
+<!-- Patrol Unit Icons Placed on Field -->
+<g transform="translate(240, 230)">
+<rect fill="#003640" height="20" rx="3" stroke="#4cd7f6" stroke-width="1.5" width="20" x="-10" y="-10"></rect>
+<text fill="#4cd7f6" font-family="JetBrains Mono" font-size="8" font-weight="bold" text-anchor="middle" x="0" y="3">U02</text>
+</g>
+<g transform="translate(560, 360)">
+<rect fill="#003640" height="20" rx="3" stroke="#4cd7f6" stroke-width="1.5" width="20" x="-10" y="-10"></rect>
+<text fill="#4cd7f6" font-family="JetBrains Mono" font-size="8" font-weight="bold" text-anchor="middle" x="0" y="3">U04</text>
+</g>
+</svg>
+<!-- HTML Node Callout Overlays Anchored on GIS Map -->
+<!-- Callout: N012 -->
+<div class="absolute top-[20%] left-[13%] bg-surface-container-high/85 backdrop-blur-md px-2 py-1 rounded border border-outline-variant/40 shadow">
+<span class="text-label-telemetry font-label-telemetry text-secondary font-bold">N012</span>
+<span class="text-label-telemetry font-label-telemetry text-on-surface-variant ml-1">Kothaguda Jnc</span>
+</div>
+<!-- Callout: R0065 Free Flow -->
+<div class="absolute top-[34%] left-[24%] bg-surface-container-high/90 backdrop-blur-md px-2.5 py-1 rounded border border-secondary/40 shadow flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-label-code font-label-code text-on-surface font-semibold">R0065</span>
+<span class="text-label-telemetry font-label-telemetry text-secondary font-bold">48 km/h</span>
+<span class="text-label-badge font-label-badge text-on-surface-variant">FREE</span>
+</div>
+<!-- Callout: N014 -->
+<div class="absolute top-[44%] left-[39%] bg-surface-container-high/85 backdrop-blur-md px-2 py-1 rounded border border-outline-variant/40 shadow">
+<span class="text-label-telemetry font-label-telemetry text-primary font-bold">N014</span>
+<span class="text-label-telemetry font-label-telemetry text-on-surface-variant ml-1">Cyber Towers Flyover</span>
+</div>
+<!-- Callout: R0082 Moderate -->
+<div class="absolute top-[68%] left-[45%] bg-surface-container-high/90 backdrop-blur-md px-2.5 py-1 rounded border border-tertiary/40 shadow flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-label-code font-label-code text-on-surface font-semibold">R0082</span>
+<span class="text-label-telemetry font-label-telemetry text-tertiary font-bold">29 km/h</span>
+<span class="text-label-badge font-label-badge text-tertiary">MODERATE</span>
+</div>
+<!-- Critical Node N015 Callout Overlay -->
+<div class="absolute top-[32%] right-[10%] bg-surface-container-lowest/95 backdrop-blur-lg p-3 rounded-lg border-2 border-error shadow-2xl z-30 max-w-xs animate-pulse-glow">
+<div class="flex items-center justify-between gap-2 border-b border-error/30 pb-1.5 mb-1.5">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-error animate-ping"></span>
+<span class="text-label-code font-label-code font-bold text-error">CRITICAL JAM // N015</span>
+</div>
+<span class="text-label-badge font-label-badge bg-error-container text-on-error-container px-1.5 py-0.5 rounded">GRIDLOCK</span>
+</div>
+<div class="text-body-sm font-body-sm text-on-surface font-medium mb-2">Segment R0067 (HITEC Inbound)</div>
+<div class="grid grid-cols-3 gap-2 bg-surface-container-high/70 p-2 rounded border border-outline-variant/30 text-center font-label-telemetry">
+<div>
+<div class="text-on-surface-variant text-[10px]">SPEED</div>
+<div class="text-error font-bold text-body-md">12 <span class="text-[10px] font-normal">km/h</span></div>
+</div>
+<div>
+<div class="text-on-surface-variant text-[10px]">QUEUE</div>
+<div class="text-error font-bold text-body-md">24 <span class="text-[10px] font-normal">veh</span></div>
+</div>
+<div>
+<div class="text-on-surface-variant text-[10px]">WAIT TIME</div>
+<div class="text-tertiary font-bold text-body-md">19m</div>
+</div>
+</div>
+<div class="mt-2 text-label-badge font-label-badge text-error flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" data-icon="emergency">emergency</span>
+              SPILLBACK SPREADING TOWARDS MADHAPUR LINK
+            </div>
+</div>
+<!-- Bottom Legend HUD -->
+<div class="absolute bottom-4 left-4 bg-surface-container-high/90 backdrop-blur-md px-3 py-2 rounded border border-outline-variant/40 flex items-center gap-4 text-label-telemetry font-label-telemetry">
+<span class="text-on-surface-variant uppercase tracking-wider font-bold">Congestion Index:</span>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-1.5 rounded bg-secondary"></span>
+<span class="text-on-surface">Free Flow (&gt;45 km/h)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-1.5 rounded bg-tertiary"></span>
+<span class="text-on-surface">Moderate (25-45 km/h)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-1.5 rounded bg-error"></span>
+<span class="text-error font-bold">Critical Bottleneck (&lt;15 km/h)</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Column (40% width): Real-Time Officer Action & Dispatch Center -->
+<section class="w-[40%] h-full bg-surface-container-lowest/80 backdrop-blur-md flex flex-col overflow-y-auto p-4 space-y-4">
+<!-- Panel Header -->
+<div class="flex justify-between items-center pb-2 border-b border-outline-variant/30">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="local_police">local_police</span>
+<h2 class="text-headline-sm font-headline-sm font-bold text-on-surface tracking-tight">Officer Action &amp; Dispatch Center</h2>
+</div>
+<span class="text-label-telemetry font-label-telemetry px-2 py-0.5 rounded bg-primary/15 text-primary border border-primary/30">
+            AUTO-ASSIST LIVE
+          </span>
+</div>
+<!-- Urgent Alert Banner Card -->
+<div class="p-3.5 rounded-lg bg-error-container/20 border-l-4 border-error border-y border-r border-error/30 shadow-md">
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-error text-[24px] shrink-0" data-icon="warning">warning</span>
+<div>
+<div class="text-label-code font-label-code font-bold text-error">
+                Critical Bottleneck at Junction N015 (Segment R0067)
+              </div>
+<p class="text-body-sm font-body-sm text-on-surface mt-1">
+                Speed dropped to <span class="font-semibold text-error">12 km/h</span>, Queue: <span class="font-semibold text-error">24 vehicles</span>. Spillback detected toward Madhapur Link. Immediate corridor clearance intervention mandated.
+              </p>
+</div>
+</div>
+</div>
+<!-- Live CCTV Feed Thumbnail Preview of Junction N015 Gridlock -->
+<div class="bg-surface-container-low rounded-lg border border-outline-variant/40 overflow-hidden shadow">
+<div class="px-3 py-1.5 bg-surface-container-high/80 flex items-center justify-between border-b border-outline-variant/30">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+<span class="text-label-code font-label-code font-bold text-on-surface">CCTV-CAM #414 // JUNCTION N015 LIVE</span>
+</div>
+<span class="text-label-telemetry font-label-telemetry text-on-surface-variant">FPS: 30 // HD STREAM</span>
+</div>
+<div class="relative h-44 bg-surface-container-highest flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover opacity-85" data-alt="High angle nighttime surveillance camera feed showing severe traffic congestion at a bustling Hyderabad metropolitan intersection with bumper to bumper cars and auto rickshaws illuminated by bright red taillights, sodium streetlamps, and cybernetic blue digital billboard reflections in a tactical command center telemetry interface style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPOA27N4KTC8R6YGmHnqueDG5n_JyO_UnTV38oy9yJZLhHNTawPwayA7QGMHI3QyESZcV5-Z2KnnEnDo0_RFzc-zuXg_vonJXIknUAHS5NQAMty9nbYMzNLopvnTHVpe9MXEWV9LV6WFS8EmPQ9uSDK226zM7BLHYfO9QHqh6T0TcWTZaHpbmQtWkK8Zrusza_IbjgzYx1rr2-SIkCyhwEkw123GjeKT2HjlQTbxq2pYMoPP5GcNJL"/>
+<!-- Camera HUD Overlays -->
+<div class="absolute inset-0 pointer-events-none p-2.5 flex flex-col justify-between">
+<div class="flex justify-between items-start text-label-telemetry font-label-telemetry">
+<span class="bg-black/70 px-1.5 py-0.5 rounded text-error border border-error/40 font-bold">● REC [N015_EASTBOUND]</span>
+<span class="bg-black/70 px-1.5 py-0.5 rounded text-on-surface-variant">LOC: 17.4431, 78.3789</span>
+</div>
+<div class="flex justify-between items-end text-label-telemetry font-label-telemetry">
+<div class="bg-black/80 p-1 rounded border border-white/10 space-y-0.5">
+<div class="text-on-surface-variant">SATURATION: <span class="text-error font-bold">96%</span></div>
+<div class="text-on-surface-variant">FLOW RATE: <span class="text-error font-bold">140 veh/hr</span></div>
+</div>
+<span class="bg-primary/20 text-primary border border-primary/40 px-2 py-0.5 rounded text-[10px] font-bold">AI OBJECT DETECT: ACTIVE</span>
+</div>
+</div>
+</div>
+</div>
+<!-- AI Recommended Immediate Tactical Actions -->
+<div class="space-y-2.5">
+<div class="flex items-center justify-between">
+<div class="text-label-code font-label-code font-bold text-primary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]" data-icon="smart_toy">smart_toy</span>
+              AI Recommended Immediate Tactical Actions
+            </div>
+<span class="text-label-badge font-label-badge text-on-surface-variant">CONFIDENCE: 94.2%</span>
+</div>
+<!-- Action Card 1: Dispatch Traffic Officer -->
+<div class="p-3.5 rounded-lg bg-surface-container-high/70 border border-primary/30 hover:border-primary/60 transition-all shadow-sm">
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-primary text-[22px] shrink-0 mt-0.5" data-icon="local_police">local_police</span>
+<div class="flex-1">
+<div class="text-body-md font-body-md font-bold text-on-surface leading-snug">
+                  Dispatch Traffic Officer to Junction N015 to manually control turn restrictions and clear gridlock
+                </div>
+<div class="text-label-telemetry font-label-telemetry text-secondary mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="schedule">schedule</span>
+                  Estimated arrival: 4 mins (Patrol Unit 04 nearby on Old Mumbai Hwy)
+                </div>
+<div class="mt-3 flex items-center justify-between">
+<span class="text-label-telemetry font-label-telemetry text-on-surface-variant">TARGET: UNIT 04 (SUB-INSPECTOR RAJESH)</span>
+<button class="bg-primary hover:bg-primary-fixed text-on-primary font-label-code font-bold py-1.5 px-3 rounded flex items-center gap-2 shadow-md hover:shadow-cyan-500/20 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-[16px]" data-icon="radio">radio</span>
+                    Dispatch Officer
+                  </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Card 2: Automated Signal Override -->
+<div class="p-3.5 rounded-lg bg-surface-container-high/70 border border-secondary/30 hover:border-secondary/60 transition-all shadow-sm">
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-secondary text-[22px] shrink-0 mt-0.5" data-icon="traffic">traffic</span>
+<div class="flex-1">
+<div class="text-body-md font-body-md font-bold text-on-surface leading-snug">
+                  Automated Signal Override: Extend Green Ratio on SIG001 by +20% for 15 minutes
+                </div>
+<div class="text-label-telemetry font-label-telemetry text-primary mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="insights">insights</span>
+                  Will flush 18 vehicles/cycle along westbound corridor
+                </div>
+<div class="mt-3 flex items-center justify-between">
+<span class="text-label-telemetry font-label-telemetry text-on-surface-variant">SIG ID: SIG001-N015 // PHASE: W-BOUND</span>
+<button class="bg-secondary-container hover:bg-secondary text-on-secondary-container font-label-code font-bold py-1.5 px-3 rounded flex items-center gap-2 shadow-md hover:shadow-emerald-500/20 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-[16px]" data-icon="traffic">traffic</span>
+                    Authorize Signal Override
+                  </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Active Dispatched Units Status List -->
+<div class="mt-2 bg-surface-container-low rounded-lg border border-outline-variant/30 p-3">
+<div class="flex justify-between items-center mb-2.5">
+<div class="text-label-code font-label-code font-bold text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[16px]" data-icon="badge">badge</span>
+              Active Dispatched Units Status
+            </div>
+<span class="text-label-telemetry font-label-telemetry text-secondary font-bold">3 ACTIVE MISSIONS</span>
+</div>
+<div class="space-y-2 font-label-telemetry">
+<!-- Unit 02 -->
+<div class="p-2 bg-surface-container-high/60 rounded border border-outline-variant/20 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-6 h-6 rounded bg-primary/20 text-primary flex items-center justify-center font-bold text-[10px]">
+                  02
+                </div>
+<div>
+<div class="text-body-sm font-body-sm font-semibold text-on-surface">Unit 02</div>
+<div class="text-on-surface-variant text-[10px]">ASI Venkat R. // PCR Van 14</div>
+</div>
+</div>
+<div class="text-right">
+<span class="px-2 py-0.5 rounded bg-primary/15 text-primary border border-primary/30 text-label-badge font-label-badge">
+                  EN ROUTE N012
+                </span>
+<div class="text-[10px] text-on-surface-variant mt-0.5">ETA: 2 MINS</div>
+</div>
+</div>
+<!-- Unit 06 -->
+<div class="p-2 bg-surface-container-high/60 rounded border border-outline-variant/20 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-6 h-6 rounded bg-secondary/20 text-secondary flex items-center justify-center font-bold text-[10px]">
+                  06
+                </div>
+<div>
+<div class="text-body-sm font-body-sm font-semibold text-on-surface">Unit 06</div>
+<div class="text-on-surface-variant text-[10px]">Const. Manoj P. // Interceptor Bike 08</div>
+</div>
+</div>
+<div class="text-right">
+<span class="px-2 py-0.5 rounded bg-secondary/15 text-secondary border border-secondary/30 text-label-badge font-label-badge">
+                  ON SCENE MINDSPACE
+                </span>
+<div class="text-[10px] text-on-surface-variant mt-0.5">TIME ON SITE: 11m</div>
+</div>
+</div>
+<!-- Unit 08 -->
+<div class="p-2 bg-surface-container-high/60 rounded border border-outline-variant/20 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-6 h-6 rounded bg-tertiary/20 text-tertiary flex items-center justify-center font-bold text-[10px]">
+                  08
+                </div>
+<div>
+<div class="text-body-sm font-body-sm font-semibold text-on-surface">Unit 08</div>
+<div class="text-on-surface-variant text-[10px]">HC Naresh T. // Sector Mobile 03</div>
+</div>
+</div>
+<div class="text-right">
+<span class="px-2 py-0.5 rounded bg-tertiary/15 text-tertiary border border-tertiary/30 text-label-badge font-label-badge">
+                  DIRECTING TRAFFIC
+                </span>
+<div class="text-[10px] text-on-surface-variant mt-0.5">GACHIBOWLI JUNCTION</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<script>
+    // Lightweight atmospheric clock simulation
+    setInterval(() => {
+      const now = new Date();
+      // Keep UI lively with minute ticker adjustments if expanded
+    }, 1000);
+  </script>
+</body></html>
