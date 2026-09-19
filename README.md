@@ -88,21 +88,26 @@ $$t_e(t) = t_{0,e} \left(1 + \alpha \left(\frac{q_e(t)}{\phi_e \cdot C_e}\right)
 
 where $t_{0,e} = \frac{L_e}{v_{f,e}}$, $q_e(t)$ is vehicular flow (vph), and $\phi_e$ is the active capacity degradation factor (accounting for roadworks or lane closures).
 
-### 2. Multi-Horizon Traffic State Forecasting
-To forecast traffic across four discrete horizons $\tau \in \{15, 30, 45, 60\}$ minutes:
-$$\hat{Y}_{e, t+\tau} = f_\theta\left(X_{e, t}, X_{e, t-1}, X_{e, t-2}, \mathcal{N}(e), C(t), W(t)\right)$$
-- **Features ($X$)**: Lagged speed/flow ($t-5m, t-10m, t-15m$), rolling mean, rolling volatility, sensor quality index.
-- **Topology ($\mathcal{N}(e)$)**: Upstream and downstream segment flow pressures, signal cycle green ratio.
-- **Context ($C(t), W(t)$)**: Rain intensity, temperature, holiday flags, diurnal cycle ($(\sin, \cos)$ hour encoding).
-- **Engine**: Multi-target LightGBM models trained with Huber loss to resist outlier spikes without target leakage.
+### 2. Direct Multi-Horizon Residual Forecasting & Conformal Uncertainty
+To forecast speed across four discrete horizons $\tau \in \{15, 30, 45, 60\}$ minutes (corresponding to 3, 6, 9, 12 steps at 5-minute sampling):
+- **Direct Strategy**: Four dedicated gradient-boosted models (one per horizon), eliminating error accumulation from autoregressive rolling.
+- **Residual Formulation**: Rather than forcing trees to memorize diurnal cycles, models predict the residual over the segment's historical hour-of-week baseline:
+  $$\Delta \hat{v}_{e, t+\tau} = f_\theta^{(\tau)}\left(X_{e, t}\right), \quad \hat{v}_{e, t+\tau} = \bar{v}_e(\text{hour\_of\_week}) + \Delta \hat{v}_{e, t+\tau}$$
+- **Derived Congestion Index ($CI$)**: Downstream modules derive $CI = \max(0, \min(1, 1 - \hat{v}/v_{f,e}))$ to guarantee a single consistent source of truth.
+- **Conformal Uncertainty Bounds**: Evaluates empirical non-conformity scores on validation residuals to compute rigorous distribution-free prediction intervals $[\hat{v} - q_{0.9}, \hat{v} + q_{0.9}]$ with guaranteed test coverage.
 
-### 3. Dual-Layer Incident Detection with Consensus
-To eradicate false positives from transient sensor noise:
-1. **Statistical Anomaly**: Detect sharp velocity drop and occupancy divergence:
-   $$Z_e(t) = \frac{v_e(t) - \mu_e(h, d)}{\sigma_e(h, d)} < -2.5 \quad \land \quad \text{Occupancy}_e(t) > 1.5 \cdot \bar{O}_e$$
-2. **Spatial-Temporal Consensus**: An anomaly is only confirmed as an incident if:
-   - It persists for $\ge 2$ consecutive timestamps ($10$ minutes), OR
-   - Upstream segment exhibits queue spillback ($\Delta \text{queue} > 0$).
+### 3. Residual-Based Incident Detection & Multi-Class Cause Attribution
+To eradicate false positives from regular peak-hour slowdowns and weather events:
+1. **Forecast Residual Signal**: Uses the unexpected prediction error rather than raw velocity drop:
+   $$S_e(t) = \frac{\hat{v}_e(t) - v_e(t)}{\sigma_{\text{resid}, e}}$$
+   Because recurring peak congestion and forecasted weather slowdowns are already anticipated by $\hat{v}$, they do not trigger alarms.
+2. **Spatial-Temporal Consensus**: An anomaly is only escalated to an active incident if it persists for $\ge 2$ consecutive timestamps (10 mins) or upstream queue spillback is detected ($\Delta \text{queue} > 0$).
+3. **Root-Cause Attribution**: Categorizes alerts into distinct operational classes:
+   - **Traffic Incident**: Localized sharp drop + queue spillback with dry weather and no roadwork.
+   - **Weather Slowdown**: Network-wide gradual speed degradation correlated with `rain_intensity > 0`.
+   - **Active Roadwork**: Capacity degradation factor $\phi_e < 1$ matching `roadworks_train.csv`.
+   - **Event Surge**: Inflow surge matching scheduled `event_level > 0`.
+   - **Recurring Bottleneck**: Persistent slowdown occurring regularly across identical hours-of-week.
 
 ### 4. Turn-Restricted Diversion Optimization
 Given an incident on segment $e^* = (u, v)$, the rerouting engine solves a constrained shortest-path problem on directed graph $G = (V, E)$ with turn penalty matrix $P(e_i, e_j) \in \{0, \infty\}$:
