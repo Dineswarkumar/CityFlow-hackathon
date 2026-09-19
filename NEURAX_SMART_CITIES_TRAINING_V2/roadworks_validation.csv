@@ -1,0 +1,4 @@
+work_id,segment_id,start_time,end_time,closure_fraction,work_type
+RW_802_001,R0171,2026-01-18 14:00:00,2026-01-18 20:05:00,0.25,lane_maintenance
+RW_802_002,R0052,2026-01-18 15:00:00,2026-01-19 00:50:00,0.34,lane_maintenance
+RW_802_003,R0231,2026-01-16 12:00:00,2026-01-16 18:49:00,0.54,lane_maintenance
