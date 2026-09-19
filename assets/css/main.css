@@ -1,0 +1,167 @@
+/* ==========================================================================
+   CITYFLOW AI — CORE DESIGN SYSTEM & LIQUID GLASSMORPHISM STYLESHEET
+   ========================================================================== */
+
+/* 1. Cross-Document View Transitions (Native seamless MPA transitions) */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+::view-transition-old(root) {
+  animation: 0.22s cubic-bezier(0.4, 0, 1, 1) both fade-out;
+}
+
+::view-transition-new(root) {
+  animation: 0.28s cubic-bezier(0, 0, 0.2, 1) both fade-in;
+}
+
+@keyframes fade-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.995); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: scale(1.005); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* 2. Bespoke Typography System */
+* {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading, .heading-brand {
+  font-family: 'Outfit', sans-serif !important;
+  letter-spacing: -0.025em;
+}
+
+.mono, .font-mono {
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* 3. Liquid Glassmorphism (Genuine refraction, subtle specular rim, deep diffusion) */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(20px) saturate(180%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) contrast(105%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.55) !important;
+  box-shadow: 0 12px 35px 0 rgba(15, 23, 42, 0.07), inset 0 1px 1px 0 rgba(255, 255, 255, 0.85) !important;
+}
+
+.dark .liquid-glass {
+  background: rgba(13, 19, 33, 0.65) !important;
+  backdrop-filter: blur(22px) saturate(190%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(190%) contrast(105%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  box-shadow: 0 16px 40px 0 rgba(0, 0, 0, 0.48), inset 0 1px 1px 0 rgba(255, 255, 255, 0.14) !important;
+}
+
+.liquid-glass-sidebar {
+  background: rgba(255, 255, 255, 0.82) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+}
+
+.dark .liquid-glass-sidebar {
+  background: rgba(11, 15, 25, 0.85) !important;
+  backdrop-filter: blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+}
+
+.liquid-glass-subtle {
+  background: rgba(255, 255, 255, 0.45) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+}
+
+.dark .liquid-glass-subtle {
+  background: rgba(15, 23, 42, 0.45) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* 4. Interactive State Transitions */
+.theme-transition {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+.card-hover {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 45px -10px rgba(6, 182, 212, 0.18), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(6, 182, 212, 0.45) !important;
+}
+
+/* 5. Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.35);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(6, 182, 212, 0.65);
+}
+
+/* 6. Sidebar Layout & Collapse Animation */
+#sidebar {
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#sidebar.collapsed {
+  width: 72px;
+}
+
+#sidebar.collapsed .sidebar-expanded-text {
+  display: none !important;
+}
+
+#sidebar.collapsed .sidebar-nav-item {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* 7. Pulse & Indicator Badges */
+.pulse-dot {
+  position: relative;
+}
+
+.pulse-dot::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  animation: radar-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  background: inherit;
+  opacity: 0.6;
+}
+
+@keyframes radar-ping {
+  75%, 100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
