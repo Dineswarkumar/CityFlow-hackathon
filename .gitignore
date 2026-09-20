@@ -41,6 +41,8 @@ NEURAX_SMART_CITIES_TRAINING_V2/forecast_targets_train.csv
 NEURAX_SMART_CITIES_TRAINING_V2/forecast_targets_validation.csv
 NEURAX_SMART_CITIES_TRAINING_V2/context_train.csv
 NEURAX_SMART_CITIES_TRAINING_V2/context_validation.csv
+NEURAX_SMART_CITIES_TESTING_NOISY_V2/traffic_input.csv
+traffic_input.csv
 *.zip
 *.tar.gz
 

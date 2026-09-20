@@ -98,11 +98,9 @@ class TelemetryCleaner:
 
         # Forward fill per segment, then backward fill, then median fallback
         if report["missing_values_imputed"] > 0:
-            cleaned = cleaned.groupby("segment_id", group_keys=False).apply(
-                lambda g: g.ffill().bfill()
-            )
+            cleaned[numeric_cols] = cleaned.groupby("segment_id")[numeric_cols].ffill().bfill()
             # Global fallback for any remaining NaNs
-            cleaned = cleaned.fillna(cleaned.median(numeric_only=True))
+            cleaned[numeric_cols] = cleaned[numeric_cols].fillna(cleaned[numeric_cols].median())
 
         # Re-compute derived Congestion Index if speed and free flow speed exist
         if "congestion_index" in cleaned.columns and "free_flow_time_min" in cleaned.columns:

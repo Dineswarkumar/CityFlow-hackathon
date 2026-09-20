@@ -1,25 +1,26 @@
 # CityFlow AI: Current Project State
 
 ## Current Position
-- **Phase**: Major Frontend & Backend Modularization
-- **Active Branch**: `checkpoint-3`
-- **Current Objective**: Refactoring monolithic `index.html` (1,490 lines) into a clean, modular Multi-Page Application (MPA) with dedicated pages (`index.html`, `commuter.html`, `police.html`, `planner.html`, `forecaster.html`), dedicated CSS (`assets/css/`), and modular JS (`assets/js/`). Organizing backend scripts and services (`backend/`, `scripts/`, `run.py`).
+- **Phase**: Checkpoint 4 Integrated & Hidden Test Dataset Evaluated
+- **Active Branch**: `feat/checkpoint-4`
+- **Current Objective**: Completed integration of citizen reporting portal, enhanced routing, and hidden test harness for 36 judge evaluation windows.
 
-## Key Decisions
-1. **Multi-Page Architecture (MPA)**:
-   - Split monolithic `index.html` into 5 distinct, uncluttered pages with dedicated URLs.
-   - Utilize modern `@view-transition { navigation: auto; }` for seamless, app-like page navigations.
-   - Separate styles into `assets/css/main.css` and `assets/css/map.css`.
-   - Separate logic into `assets/js/common.js`, `drone.js`, `map.js`, `commuter.js`, `police.js`, `planner.js`, and `forecaster.js`.
-2. **Backend Organization**:
-   - Create `backend/server.py` to serve REST endpoints and static files cleanly.
-   - Move evaluation and verification scripts to `scripts/` while retaining root forwards for backward compatibility.
-   - Provide a 1-command launcher `run.py` (`python run.py`, `python run.py --test`, `python run.py --eval`).
-3. **Preserve Tested ML Engine**:
-   - `cityflow/` package remains the core verified algorithmic backend with 100% test pass rate.
+## Key Accomplishments
+1. **Frontend Integration from Checkpoint 4**:
+   - `report.html` & `assets/js/report.js`: Citizen incident reporting portal with interactive Leaflet map, photo preview, severity triage, and direct CAD police dispatch integration.
+   - `commuter.html` & `assets/js/commuter.js`: Landmark routing with A*/Dijkstra algorithms, turn-by-turn navigation, and scenario selector (Normal, Peak, Incident, Monsoon).
+   - `assets/data/network_data.js` & `network_data.json`: All 436 OSM segment coordinates and network topology.
+   - Updated navigation sidebars across all 5 existing portals with links to Citizen Report Incident.
 
-## Next Steps
-1. Review implementation plan with user.
-2. Upon approval, execute frontend modularization and asset separation.
-3. Organize backend directories and add unified runner.
-4. Verify all tests, pages, and interactive components.
+2. **Judges' Testing Dataset & Evaluation Harness**:
+   - Received `NEURAX_SMART_CITIES_TESTING_NOISY_V2` (436 segments, 120 nodes, 36 scenarios `SC_001` - `SC_036`).
+   - Implemented `run_hidden_test.py` and `scripts/run_hidden_test.py` supporting `python run.py --hidden-test`.
+   - Strictly enforced ZERO training on test data (pure pre-trained LightGBM inference).
+   - Evaluated all 36 evaluation windows across all 6 required outputs (`state`, `forecast`, `incident`, `impact`, `diversion`, `counterfactual`).
+   - Generated outputs: `test_results/test_evaluation_results.csv` and `test_results/test_scenario_summary.json`.
+
+3. **Performance & Data Quality**:
+   - Scrubbed 916,039 noisy test telemetry rows in 5.37s (8,196 duplicates removed, 1,803 negative speeds fixed, 2,519 stuck sensors mitigated, 9,528 spikes smoothed, 165,073 missing values imputed).
+   - All 36 scenarios evaluated in 43.09s.
+   - 11/11 unit tests passing.
+   - Git hygiene verified: 78.8 MB `traffic_input.csv` safely ignored in `.gitignore`.

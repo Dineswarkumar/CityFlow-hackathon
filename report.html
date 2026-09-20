@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CityFlow AI — Citizen Incident Reporting & Authority Dispatch</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfeff',
+              100: '#cffafe',
+              500: '#06b6d4',
+              600: '#0891b2',
+              700: '#0e7490',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Outfit (Headings) + DM Sans (Body) + JetBrains Mono (Telemetry) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Leaflet GIS Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Modular CSS -->
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/map.css">
+
+  <!-- Local Network Data -->
+  <script src="assets/data/network_data.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-[#070b14] dark:text-slate-100 min-h-screen flex antialiased selection:bg-cyan-500 selection:text-white transition-colors duration-300 relative overflow-x-hidden">
+
+  <!-- QUADCOPTER DRONE SURVEILLANCE BACKGROUND CANVAS -->
+  <canvas id="droneCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+  <!-- ================= UNIFIED APPLICATION SIDEBAR ================= -->
+  <aside id="sidebar" class="w-64 liquid-glass-sidebar border-r border-slate-200/80 dark:border-white/10 flex flex-col justify-between p-4 z-40 relative theme-transition shrink-0 min-h-screen">
+    <div class="flex flex-col gap-6">
+      
+      <!-- Brand & Hamburger Toggle -->
+      <div class="flex items-center justify-between px-2 pt-1">
+        <div class="flex items-center gap-3 sidebar-expanded-text overflow-hidden">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-cyan-500/25 shrink-0">
+            <i data-lucide="activity" class="w-5 h-5 text-white"></i>
+          </div>
+          <div class="flex flex-col leading-tight">
+            <span class="font-black text-lg tracking-tight font-heading bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">CityFlow AI</span>
+            <span class="text-[10px] tracking-wider uppercase font-semibold text-slate-400 dark:text-slate-400">Hyderabad Hub</span>
+          </div>
+        </div>
+
+        <!-- 3-Line Hamburger Button -->
+        <button onclick="CityFlow.toggleSidebar()" class="p-2 rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10 transition-colors focus:outline-none" title="Toggle Sidebar">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="flex flex-col gap-1.5 pt-2">
+        <a href="index.html" class="sidebar-nav-item flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium border border-transparent transition-all">
+          <i data-lucide="layout-dashboard" class="w-5 h-5 shrink-0"></i>
+          <span class="sidebar-expanded-text">Mission Control</span>
+        </a>
+        <a href="commuter.html" class="sidebar-nav-item flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium border border-transparent transition-all">
+          <i data-lucide="map-pin" class="w-5 h-5 shrink-0"></i>
+          <span class="sidebar-expanded-text">Commuter Portal</span>
+        </a>
+        <a href="report.html" class="sidebar-nav-item flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium border border-transparent transition-all">
+          <i data-lucide="megaphone" class="w-5 h-5 shrink-0"></i>
+          <span class="sidebar-expanded-text">Report Incident</span>
+        </a>
+        <a href="police.html" class="sidebar-nav-item flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium border border-transparent transition-all">
+          <i data-lucide="shield-alert" class="w-5 h-5 shrink-0"></i>
+          <span class="sidebar-expanded-text">Tactical Police</span>
+        </a>
+        <a href="planner.html" class="sidebar-nav-item flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium border border-transparent transition-all">
+          <i data-lucide="git-pull-request" class="w-5 h-5 shrink-0"></i>
+          <span class="sidebar-expanded-text">Infrastructure</span>
+        </a>
+        <a href="forecaster.html" class="sidebar-nav-item flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium border border-transparent transition-all">
+          <i data-lucide="trending-up" class="w-5 h-5 shrink-0"></i>
+          <span class="sidebar-expanded-text">AI Forecaster</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Bottom Controls & Theme Switcher -->
+    <div class="flex flex-col gap-3 pt-4 border-t border-slate-200/80 dark:border-white/10">
+      <div class="flex items-center justify-between px-2">
+        <span class="text-xs text-slate-500 dark:text-slate-400 sidebar-expanded-text">Theme Mode</span>
+        <button onclick="CityFlow.toggleTheme()" class="p-2 rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10 transition-colors" title="Toggle Light/Dark Theme">
+          <i id="theme-moon" data-lucide="moon" class="w-4 h-4 hidden"></i>
+          <i id="theme-sun" data-lucide="sun" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- System Telemetry Badge -->
+      <div class="liquid-glass-subtle p-3 rounded-xl flex items-center gap-3 sidebar-expanded-text">
+        <div class="w-2.5 h-2.5 rounded-full bg-rose-500 pulse-dot shrink-0"></div>
+        <div class="flex flex-col leading-none">
+          <span class="text-[11px] font-bold text-slate-800 dark:text-slate-200">Police Hotline Active</span>
+          <span class="text-[9px] text-slate-400 font-mono mt-0.5">Direct CAD Link 24x7</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN VIEWPORT CONTENT ================= -->
+  <div class="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto relative z-10">
+
+    <!-- Top Executive Header -->
+    <header class="h-16 liquid-glass border-b border-slate-200/80 dark:border-white/10 px-8 flex items-center justify-between sticky top-0 z-30 shrink-0 theme-transition">
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-rose-500/15 text-rose-500 flex items-center justify-center">
+            <i data-lucide="alert-circle" class="w-4 h-4 animate-pulse"></i>
+          </div>
+          <h1 class="text-lg font-bold tracking-tight font-heading text-slate-900 dark:text-white">Citizen Road Incident Reporting</h1>
+        </div>
+        <span class="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
+          Direct Police &amp; Municipal Dispatch
+        </span>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <!-- Emergency Hotline Badge -->
+        <a href="tel:100" class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-500 text-xs font-bold transition-all">
+          <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
+          <span>Cyberabad Police: 9490617346 | Dial 100</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="flex-1 p-6 md:p-8 flex flex-col gap-6 max-w-7xl mx-auto w-full">
+
+      <!-- Hero Guidance Card -->
+      <section class="liquid-glass rounded-3xl p-6 relative overflow-hidden theme-transition border border-white/40 dark:border-white/10 shadow-xl">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-3 py-0.5 rounded-full text-[11px] font-bold bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30">
+                Citizen Sentry Protocol
+              </span>
+              <span class="text-xs text-slate-400 font-mono">Response SLA &lt; 5 Minutes</span>
+            </div>
+            <h2 class="text-2xl font-extrabold tracking-tight font-heading text-slate-900 dark:text-white mt-1">
+              Spotted a Road Hazard, Blockage, or Accident?
+            </h2>
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 max-w-3xl leading-relaxed">
+              Every citizen submission is verified in real-time by the <strong>NeurAX AI Engine</strong>, instantly alerted to the <strong>Cyberabad Traffic Police Control Room</strong> for PCR unit dispatch, and dynamically broadcasted to warn fellow commuters via live detour maps.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-3 shrink-0">
+            <div class="liquid-glass-subtle px-4 py-2.5 rounded-2xl text-center">
+              <span class="text-[10px] uppercase font-bold text-slate-400">Average Police ETA</span>
+              <div class="text-lg font-black font-heading text-emerald-500 font-mono">4.2 min</div>
+            </div>
+            <div class="liquid-glass-subtle px-4 py-2.5 rounded-2xl text-center">
+              <span class="text-[10px] uppercase font-bold text-slate-400">Resolved Today</span>
+              <div class="text-lg font-black font-heading text-cyan-400 font-mono">31 Incidents</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Layout: 7-Cols Form & Mini Map | 5-Cols Protocol & Community Feed -->
+      <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+
+        <!-- Left 7 Columns: Incident Submission Form -->
+        <div class="xl:col-span-7 flex flex-col gap-6">
+          <form id="incident-report-form" class="liquid-glass p-6 md:p-8 rounded-3xl theme-transition border border-white/40 dark:border-white/10 shadow-lg flex flex-col gap-5">
+            
+            <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-white/10 pb-4">
+              <div class="flex items-center gap-2">
+                <i data-lucide="file-edit" class="w-5 h-5 text-cyan-500"></i>
+                <h3 class="text-base font-bold font-heading text-slate-900 dark:text-white">Submit Incident Report</h3>
+              </div>
+              <span class="text-xs text-rose-500 font-semibold">* Required fields</span>
+            </div>
+
+            <!-- Row 1: Incident Category & Severity -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  Incident Category <span class="text-rose-500">*</span>
+                </label>
+                <select id="incident-type" required class="w-full px-3.5 py-2.5 rounded-xl liquid-glass-subtle border border-slate-300 dark:border-white/10 text-xs font-medium text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 bg-slate-900/10 dark:bg-slate-900/60">
+                  <option value="stalled_vehicle">🚨 Stalled / Broken-Down Vehicle</option>
+                  <option value="accident">💥 Traffic Collision / Accident</option>
+                  <option value="waterlogging">🌊 Severe Waterlogging / Flood</option>
+                  <option value="signal_failure">🚦 Traffic Signal Outage / Malfunction</option>
+                  <option value="fallen_obstacle">⚠️ Fallen Tree / Debris / Road Hazard</option>
+                  <option value="illegal_parking">🚫 Heavy Commercial Obstruction</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  Severity Level <span class="text-rose-500">*</span>
+                </label>
+                <select id="incident-severity" required class="w-full px-3.5 py-2.5 rounded-xl liquid-glass-subtle border border-slate-300 dark:border-white/10 text-xs font-medium text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 bg-slate-900/10 dark:bg-slate-900/60">
+                  <option value="critical">🔴 Priority 1 — Critical (Full or Heavy Blockage)</option>
+                  <option value="moderate" selected>🟠 Priority 2 — High (Severe Queue Forming)</option>
+                  <option value="minor">🟡 Priority 3 — Moderate (Slowdown Hazard)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Row 2: Affected Corridor / Landmark + GPS Pinpoint -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  Corridor / Location on Network <span class="text-rose-500">*</span>
+                </label>
+                <button type="button" id="gps-locate-btn" class="text-[11px] font-bold text-cyan-500 hover:text-cyan-400 flex items-center gap-1 transition-colors">
+                  <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
+                  <span>Pinpoint My GPS</span>
+                </button>
+              </div>
+              
+              <select id="incident-corridor" required class="w-full px-3.5 py-2.5 rounded-xl liquid-glass-subtle border border-slate-300 dark:border-white/10 text-xs font-medium text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 bg-slate-900/10 dark:bg-slate-900/60">
+                <option value="R0067">Corridor R0067 — Mindspace Inbound Chokepoint (Cyber Gateway)</option>
+                <option value="R0068">Corridor R0068 — Mindspace Outbound Corridor</option>
+                <option value="R0069">Corridor R0069 — Cyber Towers to Bio-Diversity Bypass</option>
+                <option value="R0115">Corridor R0115 — Bio-Diversity to Financial District Link</option>
+                <option value="R0120">Corridor R0120 — Outer Ring Road (ORR Expressway)</option>
+                <option value="R0027">Corridor R0027 — Durgam Cheruvu Cable Bridge Corridor</option>
+                <option value="R0051">Corridor R0051 — Gachibowli Stadium Main Road</option>
+                <option value="R0049">Corridor R0049 — Khajaguda to Bio-Diversity Link</option>
+              </select>
+            </div>
+
+            <!-- Interactive Pin-Drop Mini Map -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                  <i data-lucide="map-pin" class="w-3.5 h-3.5 text-rose-500"></i>
+                  <span>Drop Pin on Exact Geo-Location (Click map or drag pin)</span>
+                </label>
+                <span id="incident-coords-display" class="text-[11px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded">
+                  17.4390° N, 78.3810° E
+                </span>
+              </div>
+              <div id="report-mini-map" class="w-full h-44 rounded-2xl overflow-hidden border border-slate-300 dark:border-white/10 relative z-0"></div>
+            </div>
+
+            <!-- Row 3: Specific Lanes & Description -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  Lanes Obstructed
+                </label>
+                <input type="text" id="incident-lanes" placeholder="e.g. Center & right lane, Flyover entry" class="w-full px-3.5 py-2.5 rounded-xl liquid-glass-subtle border border-slate-300 dark:border-white/10 text-xs font-medium text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 bg-slate-900/10 dark:bg-slate-900/60">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  Your Name / Contact (Optional)
+                </label>
+                <input type="text" id="incident-reporter" placeholder="e.g. Rajesh S. (+91 98480...)" class="w-full px-3.5 py-2.5 rounded-xl liquid-glass-subtle border border-slate-300 dark:border-white/10 text-xs font-medium text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 bg-slate-900/10 dark:bg-slate-900/60">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                Detailed Incident Observations &amp; Landmarks
+              </label>
+              <textarea id="incident-desc" rows="3" placeholder="Describe vehicle numbers, severity, any injuries, water depth, or nearby landmarks (e.g. in front of Cyber Gateway Pillar 42)..." class="w-full px-3.5 py-2.5 rounded-xl liquid-glass-subtle border border-slate-300 dark:border-white/10 text-xs font-medium text-slate-900 dark:text-white focus:outline-none focus:border-cyan-500 bg-slate-900/10 dark:bg-slate-900/60"></textarea>
+            </div>
+
+            <!-- Photo Evidence Upload (Simulated with Instant Preview) -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                Photo Evidence (Optional — Helps Police verify immediately)
+              </label>
+
+              <div id="photo-dropzone" class="border-2 border-dashed border-slate-300 dark:border-white/15 rounded-2xl p-4 text-center cursor-pointer hover:border-cyan-500/50 transition-colors relative">
+                <input type="file" id="incident-photo" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full">
+                <div class="flex flex-col items-center justify-center gap-1.5 text-slate-400">
+                  <i data-lucide="camera" class="w-6 h-6 text-cyan-500"></i>
+                  <p class="text-xs font-semibold text-slate-700 dark:text-slate-200">Tap to snap a photo or upload from camera roll</p>
+                  <p class="text-[10px] text-slate-400">JPG, PNG, WebP up to 10MB</p>
+                </div>
+              </div>
+
+              <!-- Photo Preview Container -->
+              <div id="photo-preview-box" class="hidden mt-3 relative rounded-2xl overflow-hidden border border-cyan-500/40 max-h-48">
+                <img id="photo-preview-img" src="" alt="Incident Preview" class="w-full h-44 object-cover">
+                <button type="button" id="remove-photo-btn" class="absolute top-2 right-2 px-2.5 py-1 rounded-lg bg-rose-600/90 hover:bg-rose-700 text-white text-[11px] font-bold shadow-lg flex items-center gap-1">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                  <span>Remove Photo</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Anonymous Submission Checkbox -->
+            <div class="flex items-center gap-2 pt-1">
+              <input type="checkbox" id="incident-anonymous" class="rounded text-cyan-500 focus:ring-cyan-400 h-4 w-4 bg-slate-800 border-white/20">
+              <label for="incident-anonymous" class="text-xs text-slate-500 dark:text-slate-400 cursor-pointer">
+                Submit anonymously (Personal identification will be scrubbed from public feeds)
+              </label>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="submit-incident-btn" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-600 text-white font-bold text-sm shadow-xl shadow-rose-600/25 transition-all flex items-center justify-center gap-2 cursor-pointer mt-2">
+              <i data-lucide="send" class="w-4 h-4"></i>
+              <span>Dispatch Incident to Traffic Police &amp; Commuter Grid</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Right 5 Columns: Dispatch Pipeline & Community Reports Feed -->
+        <div class="xl:col-span-5 flex flex-col gap-6">
+
+          <!-- Authority Notification Protocol Guide -->
+          <div class="liquid-glass p-6 rounded-3xl theme-transition border border-white/40 dark:border-white/10 shadow-lg flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold font-heading text-slate-900 dark:text-white flex items-center gap-2">
+                <i data-lucide="shield" class="w-4 h-4 text-cyan-500"></i>
+                <span>Automatic Authority Dispatch Matrix</span>
+              </h3>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-mono">CAD SYNCED</span>
+            </div>
+
+            <div class="flex flex-col gap-2.5 text-xs">
+              <div class="p-2.5 rounded-xl liquid-glass-subtle flex items-start gap-3">
+                <div class="w-7 h-7 rounded-lg bg-rose-500/15 text-rose-500 flex items-center justify-center shrink-0 mt-0.5">
+                  <i data-lucide="siren" class="w-3.5 h-3.5"></i>
+                </div>
+                <div>
+                  <span class="font-bold text-slate-800 dark:text-slate-200">Cyberabad Traffic Police</span>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Automated Computer-Aided Dispatch (CAD) alert pushes to nearest Patrol PCR unit within 45 seconds.</p>
+                </div>
+              </div>
+
+              <div class="p-2.5 rounded-xl liquid-glass-subtle flex items-start gap-3">
+                <div class="w-7 h-7 rounded-lg bg-cyan-500/15 text-cyan-500 flex items-center justify-center shrink-0 mt-0.5">
+                  <i data-lucide="navigation" class="w-3.5 h-3.5"></i>
+                </div>
+                <div>
+                  <span class="font-bold text-slate-800 dark:text-slate-200">Commuter Detour Broadcast</span>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Instant advisory pushed to 18,400+ active commuters in Sector 4 to divert before corridor choke points.</p>
+                </div>
+              </div>
+
+              <div class="p-2.5 rounded-xl liquid-glass-subtle flex items-start gap-3">
+                <div class="w-7 h-7 rounded-lg bg-amber-500/15 text-amber-500 flex items-center justify-center shrink-0 mt-0.5">
+                  <i data-lucide="truck" class="w-3.5 h-3.5"></i>
+                </div>
+                <div>
+                  <span class="font-bold text-slate-800 dark:text-slate-200">GHMC Rapid Emergency Towing</span>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Hydraulic recovery cranes &amp; DRF water pump teams mobilized for lane clearance.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Citizen Incident Reports Board -->
+          <div class="liquid-glass p-6 rounded-3xl theme-transition border border-white/40 dark:border-white/10 shadow-lg flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i data-lucide="radio" class="w-4 h-4 text-emerald-500 animate-pulse"></i>
+                <h3 class="text-sm font-bold font-heading text-slate-900 dark:text-white">Active Citizen Field Reports</h3>
+              </div>
+              <span class="text-[10px] text-slate-400 font-mono">Live Community Stream</span>
+            </div>
+
+            <!-- List of Incidents -->
+            <div id="incident-feed-list" class="flex flex-col gap-3 max-h-[460px] overflow-y-auto pr-1">
+              <!-- Dynamically populated by report.js -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ================= ANIMATED DISPATCH STATUS MODAL ================= -->
+  <div id="dispatch-status-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden items-center justify-center p-4">
+    <div class="liquid-glass border border-white/20 rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl flex flex-col gap-5 animate-fadeIn">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-white/10 pb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center">
+            <i data-lucide="shield-check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h4 class="text-base font-bold font-heading text-white">Incident Successfully Dispatched</h4>
+            <span class="text-xs text-slate-400 font-mono">Tracking ID: <strong id="tracker-inc-id" class="text-cyan-400">HYD-INC-XXXX</strong></span>
+          </div>
+        </div>
+
+        <button onclick="CityFlowReport.closeDispatchTracker()" class="p-1.5 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Incident Meta Snapshot -->
+      <div class="p-3.5 rounded-2xl liquid-glass-subtle flex flex-col gap-1.5 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="text-slate-400">Incident Category:</span>
+          <span id="tracker-inc-type" class="font-bold text-white">Category</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-400">Network Location:</span>
+          <span id="tracker-inc-location" class="font-bold text-cyan-400 truncate max-w-[240px]">Location</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-400">Severity Assessment:</span>
+          <span id="tracker-inc-severity" class="font-bold text-rose-400">Priority 1</span>
+        </div>
+      </div>
+
+      <!-- 4-Step Animated Dispatch Progression -->
+      <div class="flex flex-col gap-3 text-xs">
+        
+        <!-- Step 1 -->
+        <div id="dispatch-step-1" class="p-3 rounded-xl border border-white/10 liquid-glass-subtle flex items-center gap-3 transition-all duration-500">
+          <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+            <i data-lucide="check" class="w-4 h-4"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-white">1. Citizen Report Verified</span>
+            <span class="text-[10px] text-slate-400">Geo-coordinates fingerprinted on Hyderabad grid</span>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div id="dispatch-step-2" class="p-3 rounded-xl border border-white/10 liquid-glass-subtle flex items-center gap-3 transition-all duration-500">
+          <div class="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0">
+            <i data-lucide="cpu" class="w-4 h-4"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-white">2. NeurAX AI Congestion Impact Analyzed</span>
+            <span class="text-[10px] text-slate-400">Projected spillback velocity: 0.18 km/min • Detour paths activated</span>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div id="dispatch-step-3" class="p-3 rounded-xl border border-white/10 liquid-glass-subtle flex items-center gap-3 transition-all duration-500">
+          <div class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+            <i data-lucide="radio" class="w-4 h-4"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-white">3. Cyberabad Police Control Room Notified</span>
+            <span class="text-[10px] text-slate-400">CAD notification issued to nearest patrol unit (Sector 4)</span>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div id="dispatch-step-4" class="p-3 rounded-xl border border-white/10 liquid-glass-subtle flex items-center gap-3 transition-all duration-500">
+          <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+            <i data-lucide="map" class="w-4 h-4"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-white">4. Commuter GIS Broadcast Active</span>
+            <span class="text-[10px] text-slate-400">Incident marker placed live on commuter routing portal</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3 pt-2">
+        <a href="commuter.html" class="flex-1 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-white font-bold text-xs shadow-md text-center transition-all">
+          View on Live Map
+        </a>
+        <button onclick="CityFlowReport.closeDispatchTracker()" class="flex-1 py-2.5 rounded-xl liquid-glass hover:bg-white/10 text-white font-bold text-xs text-center transition-all">
+          Done
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/drone.js"></script>
+  <script src="assets/js/report.js"></script>
+</body>
+</html>

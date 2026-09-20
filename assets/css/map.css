@@ -73,3 +73,102 @@ html:not(.dark) .leaflet-container {
   0% { transform: scale(0.6); opacity: 1; }
   100% { transform: scale(2.0); opacity: 0; }
 }
+
+/* ==========================================================================
+   DYNAMIC TRIP ROUTING & NAVIGATION HUD STYLES
+   ========================================================================== */
+
+/* Animated Route Polylines */
+.route-polyline-detour {
+  filter: drop-shadow(0 0 8px rgba(6, 182, 212, 0.75));
+  stroke-dasharray: 8, 8;
+  animation: routeDashFlow 24s linear infinite;
+}
+
+.route-polyline-standard {
+  filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.6));
+}
+
+.route-polyline-eco {
+  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.7));
+  stroke-dasharray: 6, 6;
+  animation: routeDashFlow 28s linear infinite;
+}
+
+@keyframes routeDashFlow {
+  from {
+    stroke-dashoffset: 400;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Route Origin & Destination Marker Pins */
+.route-waypoint-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.route-waypoint-pin:hover {
+  transform: scale(1.2);
+}
+
+.route-pin-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: white;
+  font-weight: 800;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  border: 2px solid white;
+}
+
+/* Vehicle Live Simulation Marker */
+.nav-vehicle-marker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-vehicle-pulse {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(6, 182, 212, 0.4);
+  animation: vehiclePulse 1.2s infinite ease-out;
+}
+
+.nav-vehicle-body {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #06b6d4;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 16px rgba(6, 182, 212, 0.9), 0 2px 8px rgba(0, 0, 0, 0.5);
+  border: 2px solid white;
+  transition: transform 0.15s ease-out;
+}
+
+@keyframes vehiclePulse {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Map Picker Active State */
+.map-picking-active {
+  cursor: crosshair !important;
+}
+

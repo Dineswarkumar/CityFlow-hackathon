@@ -36,6 +36,11 @@ def run_eval():
     from scripts.evaluate_models import main as eval_main
     eval_main()
 
+def run_hidden_test():
+    print("\n[TEST-DATASET] Running Hidden Test Dataset Evaluation Harness...")
+    from scripts.run_hidden_test import run_hidden_test_evaluation
+    run_hidden_test_evaluation()
+
 def run_server(port=8000):
     from backend.server import start_server
     start_server(port=port)
@@ -45,6 +50,8 @@ if __name__ == '__main__':
         run_tests()
     elif '--eval' in sys.argv:
         run_eval()
+    elif '--hidden-test' in sys.argv or '--test-data' in sys.argv:
+        run_hidden_test()
     else:
         port = 8000
         for arg in sys.argv[1:]:

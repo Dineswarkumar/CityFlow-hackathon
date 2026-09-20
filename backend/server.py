@@ -109,6 +109,7 @@ def start_server(port=PORT):
         print(f"  • Tactical Police:   http://localhost:{port}/police.html")
         print(f"  • Municipal Planner: http://localhost:{port}/planner.html")
         print(f"  • AI Forecaster:     http://localhost:{port}/forecaster.html")
+        print(f"  • Report Incident:   http://localhost:{port}/report.html")
         print("\nREST API Endpoints:")
         print(f"  • Health check:      http://localhost:{port}/api/health")
         print(f"  • Network GIS JSON:  http://localhost:{port}/api/network")

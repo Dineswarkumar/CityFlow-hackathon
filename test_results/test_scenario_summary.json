@@ -1,0 +1,1262 @@
+[
+  {
+    "scenario_id": "SC_001",
+    "critical_segment": "R0119",
+    "forecast_15m": {
+      "pred_speed_kmh": 34.5,
+      "derived_ci": 0.0,
+      "interval_90": [
+        16.9,
+        34.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": true,
+      "cause": "Recurring Bottleneck",
+      "severity": "Moderate"
+    },
+    "impact": {
+      "queue_veh": 550.1,
+      "delay_hrs": 22.92,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0117",
+        "R0123",
+        "R0164"
+      ],
+      "time_saved_min": 18.4
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_002",
+    "critical_segment": "R0344",
+    "forecast_15m": {
+      "pred_speed_kmh": 42.8,
+      "derived_ci": 0.143,
+      "interval_90": [
+        25.2,
+        57.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "LOW"
+    },
+    "diversion": {
+      "path": [
+        "R0304",
+        "R0298",
+        "R0299"
+      ],
+      "time_saved_min": 169.5
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_003",
+    "critical_segment": "R0296",
+    "forecast_15m": {
+      "pred_speed_kmh": 42.3,
+      "derived_ci": 0.296,
+      "interval_90": [
+        24.6,
+        59.9
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "LOW"
+    },
+    "diversion": {
+      "path": [
+        "R0339",
+        "R0300",
+        "R0294"
+      ],
+      "time_saved_min": 1.5
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_004",
+    "critical_segment": "R0344",
+    "forecast_15m": {
+      "pred_speed_kmh": 43.5,
+      "derived_ci": 0.13,
+      "interval_90": [
+        25.9,
+        57.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 167.7,
+      "delay_hrs": 6.99,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0304",
+        "R0298",
+        "R0299"
+      ],
+      "time_saved_min": 169.5
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_005",
+    "critical_segment": "R0303",
+    "forecast_15m": {
+      "pred_speed_kmh": 34.5,
+      "derived_ci": 0.0,
+      "interval_90": [
+        16.9,
+        34.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": true,
+      "cause": "Recurring Bottleneck",
+      "severity": "Moderate"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0298",
+        "R0299",
+        "R0343"
+      ],
+      "time_saved_min": 22.4
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_006",
+    "critical_segment": "R0402",
+    "forecast_15m": {
+      "pred_speed_kmh": 34.5,
+      "derived_ci": 0.0,
+      "interval_90": [
+        16.9,
+        34.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": true,
+      "cause": "Recurring Bottleneck",
+      "severity": "Moderate"
+    },
+    "impact": {
+      "queue_veh": 285.1,
+      "delay_hrs": 11.88,
+      "spillback": "HIGH"
+    },
+    "diversion": {
+      "path": [
+        "R0362",
+        "R0356",
+        "R0357"
+      ],
+      "time_saved_min": 365.0
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_007",
+    "critical_segment": "R0109",
+    "forecast_15m": {
+      "pred_speed_kmh": 42.8,
+      "derived_ci": 0.286,
+      "interval_90": [
+        25.2,
+        60.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": true,
+      "cause": "Incident",
+      "severity": "Critical"
+    },
+    "impact": {
+      "queue_veh": 756.4,
+      "delay_hrs": 31.52,
+      "spillback": "LOW"
+    },
+    "diversion": {
+      "path": [
+        "R0111",
+        "R0155",
+        "R0116"
+      ],
+      "time_saved_min": 1.5
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_008",
+    "critical_segment": "R0070",
+    "forecast_15m": {
+      "pred_speed_kmh": 45.4,
+      "derived_ci": 0.093,
+      "interval_90": [
+        27.7,
+        57.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": true,
+      "cause": "Incident",
+      "severity": "Moderate"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "HIGH"
+    },
+    "diversion": {
+      "path": [
+        "R0110",
+        "R0066",
+        "R0063"
+      ],
+      "time_saved_min": 13.2
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_009",
+    "critical_segment": "R0296",
+    "forecast_15m": {
+      "pred_speed_kmh": 42.6,
+      "derived_ci": 0.289,
+      "interval_90": [
+        25.0,
+        60.3
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "LOW"
+    },
+    "diversion": {
+      "path": [
+        "R0339",
+        "R0300",
+        "R0294"
+      ],
+      "time_saved_min": 1.5
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_010",
+    "critical_segment": "R0252",
+    "forecast_15m": {
+      "pred_speed_kmh": 42.8,
+      "derived_ci": 0.287,
+      "interval_90": [
+        25.2,
+        60.4
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 86.4,
+      "delay_hrs": 3.6,
+      "spillback": "LOW"
+    },
+    "diversion": {
+      "path": [
+        "R0212",
+        "R0206",
+        "R0207"
+      ],
+      "time_saved_min": 146.5
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_011",
+    "critical_segment": "R0265",
+    "forecast_15m": {
+      "pred_speed_kmh": 42.9,
+      "derived_ci": 0.142,
+      "interval_90": [
+        25.3,
+        57.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "LOW"
+    },
+    "diversion": {
+      "path": [
+        "R0263",
+        "R0269",
+        "R0310"
+      ],
+      "time_saved_min": 1.5
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_012",
+    "critical_segment": "R0374",
+    "forecast_15m": {
+      "pred_speed_kmh": 42.9,
+      "derived_ci": 0.285,
+      "interval_90": [
+        25.3,
+        60.6
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "LOW"
+    },
+    "diversion": {
+      "path": [
+        "R0379",
+        "R0418",
+        "R0376"
+      ],
+      "time_saved_min": 9.5
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_013",
+    "critical_segment": "R0206",
+    "forecast_15m": {
+      "pred_speed_kmh": 34.5,
+      "derived_ci": 0.0,
+      "interval_90": [
+        16.9,
+        34.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": true,
+      "cause": "Recurring Bottleneck",
+      "severity": "Moderate"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0211",
+        "R0252",
+        "R0208"
+      ],
+      "time_saved_min": 215.1
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_014",
+    "critical_segment": "R0374",
+    "forecast_15m": {
+      "pred_speed_kmh": 42.9,
+      "derived_ci": 0.285,
+      "interval_90": [
+        25.3,
+        60.6
+      ],
+      "confidence": "Low"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "LOW"
+    },
+    "diversion": {
+      "path": [
+        "R0379",
+        "R0418",
+        "R0376"
+      ],
+      "time_saved_min": 9.5
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_015",
+    "critical_segment": "R0379",
+    "forecast_15m": {
+      "pred_speed_kmh": 42.6,
+      "derived_ci": 0.289,
+      "interval_90": [
+        25.0,
+        60.3
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": true,
+      "cause": "Incident",
+      "severity": "Critical"
+    },
+    "impact": {
+      "queue_veh": 550.5,
+      "delay_hrs": 22.94,
+      "spillback": "LOW"
+    },
+    "diversion": {
+      "path": [
+        "R0374",
+        "R0375",
+        "R0417"
+      ],
+      "time_saved_min": 1.5
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_016",
+    "critical_segment": "R0402",
+    "forecast_15m": {
+      "pred_speed_kmh": 34.5,
+      "derived_ci": 0.0,
+      "interval_90": [
+        16.9,
+        34.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": true,
+      "cause": "Recurring Bottleneck",
+      "severity": "Moderate"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0362",
+        "R0356",
+        "R0357"
+      ],
+      "time_saved_min": 365.0
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_017",
+    "critical_segment": "R0239",
+    "forecast_15m": {
+      "pred_speed_kmh": 43.2,
+      "derived_ci": 0.137,
+      "interval_90": [
+        25.5,
+        57.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 51.0,
+      "delay_hrs": 2.12,
+      "spillback": "LOW"
+    },
+    "diversion": {
+      "path": [
+        "R0241",
+        "R0285",
+        "R0246"
+      ],
+      "time_saved_min": 116.8
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_018",
+    "critical_segment": "R0302",
+    "forecast_15m": {
+      "pred_speed_kmh": 44.3,
+      "derived_ci": 0.0,
+      "interval_90": [
+        26.7,
+        46.0
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0262",
+        "R0256",
+        "R0257"
+      ],
+      "time_saved_min": 18.2
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_019",
+    "critical_segment": "R0172",
+    "forecast_15m": {
+      "pred_speed_kmh": 44.4,
+      "derived_ci": 0.0,
+      "interval_90": [
+        26.7,
+        46.0
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0132",
+        "R0126",
+        "R0127"
+      ],
+      "time_saved_min": 14.2
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_020",
+    "critical_segment": "R0366",
+    "forecast_15m": {
+      "pred_speed_kmh": 43.5,
+      "derived_ci": 0.275,
+      "interval_90": [
+        25.8,
+        61.1
+      ],
+      "confidence": "Low"
+    },
+    "incident": {
+      "detected": true,
+      "cause": "Roadwork",
+      "severity": "Minor"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "LOW"
+    },
+    "diversion": {
+      "path": [
+        "R0409",
+        "R0368",
+        "R0364"
+      ],
+      "time_saved_min": 20.5
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_021",
+    "critical_segment": "R0366",
+    "forecast_15m": {
+      "pred_speed_kmh": 43.8,
+      "derived_ci": 0.27,
+      "interval_90": [
+        26.2,
+        61.4
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": true,
+      "cause": "Roadwork",
+      "severity": "Minor"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "LOW"
+    },
+    "diversion": {
+      "path": [
+        "R0409",
+        "R0368",
+        "R0364"
+      ],
+      "time_saved_min": 20.5
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_022",
+    "critical_segment": "R0119",
+    "forecast_15m": {
+      "pred_speed_kmh": 34.5,
+      "derived_ci": 0.0,
+      "interval_90": [
+        16.9,
+        34.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": true,
+      "cause": "Recurring Bottleneck",
+      "severity": "Moderate"
+    },
+    "impact": {
+      "queue_veh": 207.9,
+      "delay_hrs": 8.66,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0117",
+        "R0123",
+        "R0164"
+      ],
+      "time_saved_min": 18.4
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_023",
+    "critical_segment": "R0285",
+    "forecast_15m": {
+      "pred_speed_kmh": 43.1,
+      "derived_ci": 0.139,
+      "interval_90": [
+        25.4,
+        57.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 314.1,
+      "delay_hrs": 13.09,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0242",
+        "R0239",
+        "R0245"
+      ],
+      "time_saved_min": 13.8
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_024",
+    "critical_segment": "R0100",
+    "forecast_15m": {
+      "pred_speed_kmh": 43.5,
+      "derived_ci": 0.131,
+      "interval_90": [
+        25.8,
+        57.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 134.6,
+      "delay_hrs": 5.61,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0143",
+        "R0104",
+        "R0098"
+      ],
+      "time_saved_min": 113.2
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_025",
+    "critical_segment": "R0303",
+    "forecast_15m": {
+      "pred_speed_kmh": 34.5,
+      "derived_ci": 0.0,
+      "interval_90": [
+        16.9,
+        34.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": true,
+      "cause": "Recurring Bottleneck",
+      "severity": "Moderate"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0298",
+        "R0299",
+        "R0343"
+      ],
+      "time_saved_min": 22.4
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_026",
+    "critical_segment": "R0304",
+    "forecast_15m": {
+      "pred_speed_kmh": 44.5,
+      "derived_ci": 0.0,
+      "interval_90": [
+        26.9,
+        46.0
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": true,
+      "cause": "Recurring Bottleneck",
+      "severity": "Moderate"
+    },
+    "impact": {
+      "queue_veh": 357.9,
+      "delay_hrs": 14.91,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0347",
+        "R0308",
+        "R0302"
+      ],
+      "time_saved_min": 18.5
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_027",
+    "critical_segment": "R0348",
+    "forecast_15m": {
+      "pred_speed_kmh": 40.6,
+      "derived_ci": 0.0,
+      "interval_90": [
+        22.9,
+        46.0
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0353",
+        "R0394",
+        "R0350"
+      ],
+      "time_saved_min": 18.2
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_028",
+    "critical_segment": "R0316",
+    "forecast_15m": {
+      "pred_speed_kmh": 44.0,
+      "derived_ci": 0.12,
+      "interval_90": [
+        26.3,
+        57.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": true,
+      "cause": "Incident",
+      "severity": "Minor"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0359",
+        "R0320",
+        "R0314"
+      ],
+      "time_saved_min": 141.0
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_029",
+    "critical_segment": "R0058",
+    "forecast_15m": {
+      "pred_speed_kmh": 43.3,
+      "derived_ci": 0.133,
+      "interval_90": [
+        25.7,
+        57.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "LOW"
+    },
+    "diversion": {
+      "path": [
+        "R0098",
+        "R0054",
+        "R0051"
+      ],
+      "time_saved_min": 231.7
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_030",
+    "critical_segment": "R0195",
+    "forecast_15m": {
+      "pred_speed_kmh": 34.5,
+      "derived_ci": 0.0,
+      "interval_90": [
+        16.9,
+        34.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": true,
+      "cause": "Recurring Bottleneck",
+      "severity": "Moderate"
+    },
+    "impact": {
+      "queue_veh": 935.4,
+      "delay_hrs": 38.98,
+      "spillback": "HIGH"
+    },
+    "diversion": {
+      "path": [
+        "R0190",
+        "R0191",
+        "R0235"
+      ],
+      "time_saved_min": 13.7
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_031",
+    "critical_segment": "R0252",
+    "forecast_15m": {
+      "pred_speed_kmh": 43.2,
+      "derived_ci": 0.28,
+      "interval_90": [
+        25.6,
+        60.9
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": true,
+      "cause": "Recurring_Bottleneck",
+      "severity": "Critical"
+    },
+    "impact": {
+      "queue_veh": 261.7,
+      "delay_hrs": 10.9,
+      "spillback": "LOW"
+    },
+    "diversion": {
+      "path": [
+        "R0212",
+        "R0206",
+        "R0207"
+      ],
+      "time_saved_min": 146.5
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_032",
+    "critical_segment": "R0282",
+    "forecast_15m": {
+      "pred_speed_kmh": 34.5,
+      "derived_ci": 0.0,
+      "interval_90": [
+        16.9,
+        34.5
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": true,
+      "cause": "Recurring Bottleneck",
+      "severity": "Moderate"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0287",
+        "R0328",
+        "R0284"
+      ],
+      "time_saved_min": 14.3
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_033",
+    "critical_segment": "R0345",
+    "forecast_15m": {
+      "pred_speed_kmh": 44.5,
+      "derived_ci": 0.0,
+      "interval_90": [
+        26.9,
+        46.0
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 130.2,
+      "delay_hrs": 5.42,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0343",
+        "R0349",
+        "R0390"
+      ],
+      "time_saved_min": 10.5
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_034",
+    "critical_segment": "R0172",
+    "forecast_15m": {
+      "pred_speed_kmh": 44.8,
+      "derived_ci": 0.0,
+      "interval_90": [
+        27.1,
+        46.0
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0132",
+        "R0126",
+        "R0127"
+      ],
+      "time_saved_min": 14.2
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_035",
+    "critical_segment": "R0348",
+    "forecast_15m": {
+      "pred_speed_kmh": 44.9,
+      "derived_ci": 0.0,
+      "interval_90": [
+        27.3,
+        46.0
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "MEDIUM"
+    },
+    "diversion": {
+      "path": [
+        "R0353",
+        "R0394",
+        "R0350"
+      ],
+      "time_saved_min": 18.2
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  },
+  {
+    "scenario_id": "SC_036",
+    "critical_segment": "R0252",
+    "forecast_15m": {
+      "pred_speed_kmh": 42.4,
+      "derived_ci": 0.293,
+      "interval_90": [
+        24.8,
+        60.0
+      ],
+      "confidence": "Medium"
+    },
+    "incident": {
+      "detected": false,
+      "cause": "Normal Flow",
+      "severity": "Low"
+    },
+    "impact": {
+      "queue_veh": 0.0,
+      "delay_hrs": 0.0,
+      "spillback": "LOW"
+    },
+    "diversion": {
+      "path": [
+        "R0212",
+        "R0206",
+        "R0207"
+      ],
+      "time_saved_min": 146.5
+    },
+    "counterfactual": {
+      "candidate": "PLAN0089",
+      "roi": 6984.08
+    }
+  }
+]

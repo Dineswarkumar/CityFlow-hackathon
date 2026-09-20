@@ -1,0 +1,40 @@
+{
+  "version": "2.0",
+  "segments": 436,
+  "nodes": 120,
+  "training_days": 15,
+  "validation_days": 4,
+  "hidden_test_days": 8,
+  "resolution": "5 minutes",
+  "training_observation_rows": 1883520,
+  "validation_observation_rows": 502272,
+  "test_observation_rows": 1004544,
+  "test_scenarios": 36,
+  "features_added": [
+    "OD demand profiles",
+    "signal plans",
+    "turn restrictions",
+    "planning candidates",
+    "roadworks",
+    "scenario windows",
+    "separate forecast labels",
+    "private intervention reference"
+  ],
+  "noise": [
+    "missing values",
+    "duplicates",
+    "spikes",
+    "stuck sensors",
+    "impossible negative readings",
+    "row shuffle"
+  ],
+  "test_rows": 1004544,
+  "training_rows": 1883520,
+  "validation_rows": 502272,
+  "network_segments": 436,
+  "network_nodes": 120,
+  "hidden_truth_files": [
+    "scenario_ground_truth.csv",
+    "intervention_reference.csv"
+  ]
+}
